@@ -3,15 +3,38 @@
   "version": "1.0.0",
   "main": "src/app.ts",
   "scripts": {
-    "dev/backend": "nodemon src/app.ts"
+    "typeorm": "typeorm-ts-node-commonjs -d ./src/typeorm-cli.ts",
+    "migration:create": "yarn run typeorm -- migration:create ./src/migrations/AutoMigration",
+    "migration:generate": "yarn run typeorm -- migration:generate ./src/migrations/AutoMigration",
+    "migration:run": "yarn run typeorm -- migration:run",
+    "migration:revert": "yarn run typeorm -- migration:revert",
+    "migrate:up": "ts-node ./node_modules/typeorm/cli.js migration:run",
+    "migrate:down": "ts-node ./node_modules/typeorm/cli.js migration:revert",
+    "dev/backend": "nodemon -r tsconfig-paths/register src/app.ts"
   },
   "repository": "https://github.com/itsbhaumikjoshi/course-architect-ai.git",
   "author": "Bhaumik Joshi",
   "license": "MIT",
   "devDependencies": {
+    "@types/bcrypt": "^5.0.2",
+    "@types/dotenv": "^8.2.3",
+    "@types/express": "^5.0.3",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^24.0.14",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "dotenv": "^17.2.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "pg": "^8.16.3",
+    "reflect-metadata": "^0.2.2",
+    "typeorm": "^0.3.25",
+    "uuid": "^11.1.0",
+    "winston": "^3.17.0"
   }
 }
