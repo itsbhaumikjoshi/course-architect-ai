@@ -1,0 +1,37 @@
+import {
+    Column,
+    CreateDateColumn,
+    DeleteDateColumn,
+    Entity,
+    JoinColumn,
+    ManyToOne,
+    PrimaryGeneratedColumn,
+    UpdateDateColumn
+} from "typeorm";
+import { Module } from "@/models";
+
+@Entity("lessons")
+export default class Lesson {
+    @PrimaryGeneratedColumn("uuid")
+    public id!: string;
+
+    @Column({ type: "varchar", length: "250", nullable: false })
+    public title!: string;
+
+    @Column({ type: "text", nullable: false })
+    public content!: string;
+
+    @ManyToOne(() => Module, (m) => m.lessons, { onDelete: "CASCADE" })
+    @JoinColumn({ name: "module_id" })
+    public module!: Module | string;
+
+    @CreateDateColumn({ name: "created_at", type: "timestamptz" })
+    public createdAt!: Date;
+
+    @UpdateDateColumn({ name: "updated_at", type: "timestamptz" })
+    public updatedAt!: Date;
+
+    @DeleteDateColumn({ name: "deleted_at", type: "timestamptz" })
+    public deletedAt: Date;
+
+}

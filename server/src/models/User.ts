@@ -9,7 +9,7 @@ import {
     UpdateDateColumn
 } from "typeorm";
 import { PasswordHasher } from "@/helpers";
-import { Session } from "@/models";
+import { Course, Session } from "@/models";
 
 @Entity("users")
 export default class User {
@@ -53,5 +53,8 @@ export default class User {
 
     @OneToMany(() => Session, (s) => s.user, { cascade: ['soft-remove'] })
     public sessions: Session[];
+
+    @OneToMany(() => Course, (c) => c.user, { cascade: ['soft-remove'] })
+    public courses: Course[];
 
 }
