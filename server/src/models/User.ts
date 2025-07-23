@@ -22,24 +22,22 @@ export default class User {
     @Column({ type: "varchar", length: 150, nullable: false, unique: true })
     public email!: string;
 
+    @Column({ type: "varchar", length: 250, nullable: false, name: "name" })
+    public name!: string;
 
-    @Column({ type: "varchar", length: 100, nullable: false, name: "first_name" })
-    public firstName!: string;
-
-
-    @Column({ type: "varchar", length: 100, nullable: false, name: "last_name" })
-    public lastName!: string;
+    @Column({ type: "bool", default: false, name: "oidc" })
+    public oidc!: boolean;
 
     @Column({ type: "char", length: 60, nullable: false })
-    public password!: string;
+    public password?: string;
 
     async verifyPassword(password: string): Promise<boolean> {
-        return await this.hasher.compare(password, this.password);
+        return this.password ? await this.hasher.compare(password, this.password) : true;
     }
 
     @BeforeInsert()
     async hashPassword() {
-        this.password = await this.hasher.hash(this.password);
+        if (this.password) this.password = await this.hasher.hash(this.password);
     }
 
     @CreateDateColumn({ name: "created_at", type: "timestamptz" })
