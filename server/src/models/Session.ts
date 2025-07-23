@@ -12,23 +12,23 @@ export default class Session {
     public user!: User | string;
 
     @Column({ type: "timestamptz", name: "expires_at" })
-    public expires_at!: Date;
+    public expiresAt!: Date;
 
     @CreateDateColumn({ type: "timestamptz", name: "created_at" })
-    public created_at!: Date;
+    public createdAt!: Date;
 
     @DeleteDateColumn({ type: "timestamptz", name: "deleted_at" })
-    public deleted_at?: Date;
+    public deletedAt?: Date;
 
     isValid(): boolean {
-        return this.deleted_at == null && this.expires_at < new Date();
+        return this.deletedAt == null && this.expiresAt < new Date();
     }
 
     // if token expxires in one day or less renew it.
     hasToRenew(): boolean {
         if (!this.isValid()) return false;
         const now = new Date();
-        const difference = (now.getTime() - this.expires_at.getTime()) / (1000 * 24 * 60 * 60);
+        const difference = (now.getTime() - this.expiresAt.getTime()) / (1000 * 24 * 60 * 60);
         return difference <= 1;
     }
 
