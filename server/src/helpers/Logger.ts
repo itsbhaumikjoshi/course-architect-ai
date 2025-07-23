@@ -23,7 +23,7 @@ export default class Logger {
                 ],
             });
             const isProduction = AccessEnv.getInstance().get("NODE_ENV") == PRODUCTION;
-            if (isProduction)
+            if (!isProduction)
                 this.logger.add(new transports.Console({
                     format: format.combine(
                         format.colorize(),
