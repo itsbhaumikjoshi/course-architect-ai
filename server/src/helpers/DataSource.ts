@@ -1,18 +1,19 @@
 import { DataSource } from "typeorm";
 import { AccessEnv, Logger } from "@/helpers";
-import { Session, User } from "@/models";
+import { Course, Module, Lesson, Session, User } from "@/models";
+import { DATABASE_TYPE, DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME } from "@/const";
 
 export default class AppDataSource {
     private static dataSource: DataSource;
-    private static accessEnv = AccessEnv.getInstance();
 
     static getDataSource(): DataSource {
         if (!this.dataSource) {
-            const host = this.accessEnv.get("DB_HOST");
-            const port = this.accessEnv.get("DB_PORT");
-            const database = this.accessEnv.get("DB_NAME");
-            const username = this.accessEnv.get("DB_USERNAME");
-            const password = this.accessEnv.get("DB_PASSWORD");
+            const accessEnv = AccessEnv.getInstance();
+            const host = accessEnv.get(DB_HOST);
+            const port = accessEnv.get(DB_PORT);
+            const database = accessEnv.get(DB_NAME);
+            const username = accessEnv.get(DB_USERNAME);
+            const password = accessEnv.get(DB_PASSWORD);
 
             if (
                 !host ||
@@ -21,20 +22,23 @@ export default class AppDataSource {
                 !username ||
                 !password
             ) {
-                // this.logger.error("Missing essential env variables. Unable to connect with DB.");
+                Logger.getLogger().error("Missing essential env variables. Unable to connect with DB.");
                 process.exit(1);
             }
 
             const dbPort = Number(port);
 
             this.dataSource = new DataSource({
-                type: "postgres",
+                type: DATABASE_TYPE,
                 host,
                 port: dbPort,
                 database,
                 username,
                 password,
                 entities: [
+                    Course,
+                    Module,
+                    Lesson,
                     User,
                     Session
                 ],
