@@ -3,15 +3,12 @@ export default class AccessEnv {
     private data:Record<string, string>;
     private static instance: AccessEnv;
 
-    private init(): void {
+    constructor() {
         this.data = {};
     }
 
     static getInstance(): AccessEnv {
-        if(!this.instance) {
-            this.instance = new AccessEnv();
-            this.instance.init();
-        }
+        if(!this.instance) this.instance = new AccessEnv();
         return this.instance;
     }
 
@@ -22,6 +19,6 @@ export default class AccessEnv {
             if(value) this.data[key] = value;
         }
         return value;
-    }   
+    }
 
 }
