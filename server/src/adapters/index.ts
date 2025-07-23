@@ -1,0 +1,1 @@
+export { default as LLM } from "@/adapters/LLM";
