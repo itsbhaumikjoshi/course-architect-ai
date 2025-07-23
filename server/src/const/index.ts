@@ -1,0 +1,15 @@
+export const DATABASE_TYPE = "postgres";
+export const DB_HOST = "DB_HOST";
+export const DB_NAME = "DB_NAME";
+export const DB_PORT = "DB_PORT"
+export const DB_PASSWORD = "DB_PASSWORD";
+export const DB_USERNAME = "DB_USERNAME";
+export const JWT_EXPIRES_IN = "JWT_EXPIRES_IN";
+export const GEMINI_API_KEY = "GEMINI_API_KEY";
+export const GEMINI_MODEL = "gemini-2.0-flash-001";
+export const GOOGLE_OAUTH_CLIENT_ID = "GOOGLE_OAUTH_CLIENT_ID";
+export const GOOGLE_OAUTH_CLIENT_SECRET = "GOOGLE_OAUTH_CLIENT_SECRET"; 
+export const GOOGLE_OAUTH_REDIRECT_URI = "GOOGLE_OAUTH_REDIRECT_URI";
+export const PRODUCTION = "production";
+export const JWT_SECRET = "JWT_SECRET";
+export const YOUTUBE_API_KEY = "YOUTUBE_API_KEY";
