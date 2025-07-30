@@ -16,12 +16,12 @@ export default class AuthMiddleware {
                     message: "Invalid token found."
                 });
                 const token = tokenHeader.split(" ")[1];
-                const auth = await this.authService.authenticate({ token });
+                const auth = await this.authService.authenticate(token);
                 // injecting user_id and session_id in the request for other funcs to use.
-                if (auth) {
+                if (auth && auth.sessionId && auth.userId) {
                     res.locals.userId = auth.userId;
                     res.locals.sessionId = auth.sessionId;
-                    next();
+                    return next();
                 }
                 return res.status(403).json({
                     message: "You are not authorized to visit this route. Please login first."
