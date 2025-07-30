@@ -6,6 +6,7 @@ import {
     JoinColumn,
     ManyToOne,
     PrimaryGeneratedColumn,
+    RelationId,
     UpdateDateColumn
 } from "typeorm";
 import { Module } from "@/models";
@@ -15,15 +16,15 @@ export default class Lesson {
     @PrimaryGeneratedColumn("uuid")
     public id!: string;
 
-    @Column({ type: "varchar", length: "250", nullable: false })
-    public title!: string;
-
     @Column({ type: "text", nullable: false })
     public content!: string;
 
     @ManyToOne(() => Module, (m) => m.lessons, { onDelete: "CASCADE" })
     @JoinColumn({ name: "module_id" })
     public module!: Module | string;
+
+    @RelationId((lesson: Lesson) => lesson.module)
+    public moduleId!: string;
 
     @CreateDateColumn({ name: "created_at", type: "timestamptz" })
     public createdAt!: Date;

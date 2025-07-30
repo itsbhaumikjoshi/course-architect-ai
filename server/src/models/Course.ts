@@ -7,6 +7,7 @@ import {
     ManyToOne,
     OneToMany,
     PrimaryGeneratedColumn,
+    RelationId,
     UpdateDateColumn
 } from "typeorm";
 import { User, Module } from "@/models";
@@ -25,6 +26,9 @@ export default class Course {
     @ManyToOne(() => User, (user) => user.courses, { onDelete: "CASCADE" })
     @JoinColumn({ name: "user_id" })
     public user!: User | string;
+    
+    @RelationId((course: Course) => course.user)
+    public userId!: string;
 
     @CreateDateColumn({ name: "created_at", type: "timestamptz" })
     public createdAt!: Date;
