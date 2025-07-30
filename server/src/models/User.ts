@@ -4,12 +4,14 @@ import {
     CreateDateColumn,
     DeleteDateColumn,
     Entity,
+    Index,
     OneToMany,
     PrimaryGeneratedColumn,
     UpdateDateColumn
 } from "typeorm";
 import { PasswordHasher } from "@/helpers";
 import { Course, Session } from "@/models";
+import { OIDC_PROVIDER } from "@/types/auth";
 
 @Entity("users")
 export default class User {
@@ -28,7 +30,14 @@ export default class User {
     @Column({ type: "bool", default: false, name: "oidc" })
     public oidc!: boolean;
 
-    @Column({ type: "char", length: 60, nullable: false })
+    @Index()
+    @Column({ type: "varchar", nullable: true, name: "oidc_id" })
+    public oidcId?: string;
+
+    @Column({ type: "enum", enum: OIDC_PROVIDER, nullable: true, name: "oidc_provider" })
+    public oidcProvider?: OIDC_PROVIDER;
+
+    @Column({ type: "char", length: 60, nullable: true })
     public password?: string;
 
     async verifyPassword(password: string): Promise<boolean> {
