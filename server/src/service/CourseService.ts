@@ -55,7 +55,6 @@ export default class CourseService {
                 response = response.slice(response.indexOf('{'), response.lastIndexOf('}') + 1);
                 const llmResponse = JSON.parse(response) as LLMResponse;
                 this.logger.info(`${this.constructor.name}: LLM Response for user: ${userId}, input: ${input}, and ${llmResponse}`);
-                console.log(llmResponse);
                 const course = await this.courseRepo.create({
                     title: llmResponse.title,
                     description: llmResponse.description,
