@@ -4,6 +4,7 @@ export const DB_NAME = "DB_NAME";
 export const DB_PORT = "DB_PORT"
 export const DB_PASSWORD = "DB_PASSWORD";
 export const DB_USERNAME = "DB_USERNAME";
+export const FRONTEND_URL = "FRONTEND_URL";
 export const JWT_EXPIRES_IN = "JWT_EXPIRES_IN";
 export const GEMINI_API_KEY = "GEMINI_API_KEY";
 export const GEMINI_MODEL = "gemini-2.0-flash-001";

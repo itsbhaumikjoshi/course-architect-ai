@@ -1,8 +1,11 @@
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 import { AccessEnv, Logger } from "@/helpers";
 import { AppDataSource } from "@/helpers";
 import Router from "@/routes";
+import { FRONTEND_URL } from "./const";
 
 export default class Server {
 
@@ -27,11 +30,19 @@ export default class Server {
     async start() {
         try {
             await this.init();
-            
+
+            this.app.use(cors({
+                origin: this.accessEnv.get(FRONTEND_URL),
+                credentials: true,
+            }));
+
             // parse string body
             this.app.use(express.json());
             this.app.use(express.urlencoded({ extended: true }));
-            
+
+            // parse cookies in request
+            this.app.use(cookieParser());
+
             //routes
             const router = new Router();
             this.app.use("/", router.get());

@@ -11,11 +11,10 @@ export default class AuthMiddleware {
     authenticate() {
         return async (req: Request, res: Response, next: NextFunction) => {
             try {
-                const tokenHeader = req.header("authorization");
-                if (!tokenHeader || tokenHeader.split(" ").length != 2 || tokenHeader.split(" ")[0] != "Bearer") return res.status(400).json({
-                    message: "Invalid token found."
+                const token = req.cookies["token"] as string | undefined;
+                if (!token) return res.status(403).json({
+                    message: "You are not authorized to visit this route. Please login first."
                 });
-                const token = tokenHeader.split(" ")[1];
                 const auth = await this.authService.authenticate(token);
                 // injecting user_id and session_id in the request for other funcs to use.
                 if (auth && auth.sessionId && auth.userId) {

@@ -10,13 +10,15 @@
     "migration:revert": "yarn run typeorm -- migration:revert",
     "migrate:up": "ts-node ./node_modules/typeorm/cli.js migration:run",
     "migrate:down": "ts-node ./node_modules/typeorm/cli.js migration:revert",
-    "dev:backend": "nodemon -r tsconfig-paths/register src/app.ts"
+    "dev": "nodemon -r tsconfig-paths/register src/app.ts"
   },
   "repository": "https://github.com/itsbhaumikjoshi/course-architect-ai.git",
   "author": "Bhaumik Joshi",
   "license": "MIT",
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/cookie-parser": "^1.4.9",
+    "@types/cors": "^2.8.19",
     "@types/dotenv": "^8.2.3",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
@@ -30,6 +32,8 @@
     "@google/genai": "^1.10.0",
     "@googleapis/youtube": "^28.0.0",
     "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "google-auth-library": "^10.1.0",

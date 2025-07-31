@@ -1,5 +1,6 @@
 import { GoogleOAuth2Client } from "@/adapters/OAuth2";
-import { Logger } from "@/helpers";
+import { FRONTEND_URL, PRODUCTION } from "@/const";
+import { AccessEnv, Logger } from "@/helpers";
 import AuthMiddleware from "@/middleware/AuthMiddleware";
 import { AuthService, OAuthService, UserService } from "@/service";
 import { OIDC_PROVIDER } from "@/types/auth";
@@ -10,6 +11,7 @@ export default class AuthRouter {
     private authService;
     private userService;
     private logger;
+    private accessEnv;
     private authMiddleware
     private googleOauth2Client;
     private oauthService;
@@ -18,6 +20,7 @@ export default class AuthRouter {
         this.router = ExpressRouter();
         this.authService = new AuthService();
         this.logger = Logger.getLogger();
+        this.accessEnv = AccessEnv.getInstance();
         this.googleOauth2Client = new GoogleOAuth2Client();
         this.authMiddleware = new AuthMiddleware();
         this.userService = new UserService();
@@ -47,12 +50,17 @@ export default class AuthRouter {
                         message: "Invalid email or password.",
                     });
                 }
-                return res.status(200).json({
-                    token
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: this.accessEnv.get(PRODUCTION) == PRODUCTION,
+                    maxAge: 86400 * 1000,
+                    sameSite: "lax",
+                    path: "/",
                 });
+                res.status(200).send();
             } catch (error) {
                 res.status(500).json({
-                    error: error
+                    error
                 });
             }
         };
@@ -67,6 +75,7 @@ export default class AuthRouter {
                 });
                 const token = tokenHeader.split(" ")[1];
                 await this.authService.logout(token);
+                res.clearCookie("token");
                 res.status(200).json({
                     message: "Logged out successfully"
                 });
@@ -102,9 +111,14 @@ export default class AuthRouter {
                     message: "Email or password or name field missing."
                 });
                 const token = await this.authService.register({ email, password, name });
-                res.status(201).json({
-                    token
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: this.accessEnv.get(PRODUCTION) == PRODUCTION,
+                    maxAge: 86400 * 1000,
+                    sameSite: "lax",
+                    path: "/",
                 });
+                res.status(200).send();
             } catch (error) {
                 res.status(500).json({
                     error
@@ -136,9 +150,14 @@ export default class AuthRouter {
                     oidcId,
                     oidcProvider: provider
                 });
-                res.status(200).json({
-                    token
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    secure: this.accessEnv.get(PRODUCTION) == PRODUCTION,
+                    maxAge: 86400 * 1000,
+                    sameSite: "lax",
+                    path: "/",
                 });
+                return res.redirect(302, this.accessEnv.get(FRONTEND_URL) as string);
             } catch (error) {
                 res.status(500).json({
                     error: error
