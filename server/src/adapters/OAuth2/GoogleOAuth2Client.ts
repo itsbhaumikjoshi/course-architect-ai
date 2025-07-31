@@ -46,10 +46,10 @@ export default class GoogleOAuth2 {
         try {
             const { tokens } = await this.oauthClient.getToken(code);
             this.oauthClient.setCredentials(tokens);
-            const res = await this.oauthClient.request<{ data: GoogleProfile }>({
+            const res = await this.oauthClient.request<GoogleProfile>({
                 url: "https://www.googleapis.com/oauth2/v2/userinfo",
             });
-            return res?.data?.data;
+            return res?.data;
         } catch (error) {
             Logger.getLogger().error(`${this.constructor.name}: ${error}`);
             throw error;
