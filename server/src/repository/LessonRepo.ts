@@ -1,15 +1,7 @@
 import { Logger } from "@/helpers";
 import { Lesson } from "@/models";
+import { ICreateLesson } from "@/types";
 import { QueryRunner } from "typeorm";
-
-export type CreateLesson = {
-    content: string,
-    moduleId: string,
-};
-
-export type GetLessons = {
-    moduleId: string,
-}
 
 export default class LessonRepo {
     private logger;
@@ -17,7 +9,7 @@ export default class LessonRepo {
         this.logger = Logger.getLogger();
     }
 
-    async create({ content, moduleId }: CreateLesson, queryRunner: QueryRunner): Promise<Lesson | null> {
+    async create({ content, moduleId }: ICreateLesson, queryRunner: QueryRunner): Promise<Lesson | null> {
         try {
             const lesson = await queryRunner.manager.create(Lesson, {
                 content,
@@ -32,9 +24,9 @@ export default class LessonRepo {
         }
     }
 
-    async get({ moduleId }: GetLessons, queryRunner: QueryRunner): Promise<Lesson[] | null> {
+    async findByModuleId(moduleId: string, queryRunner: QueryRunner): Promise<Lesson[] | null> {
         try {
-            const lessons = await queryRunner.manager.findBy(Lesson, { module: moduleId });
+            const lessons = await queryRunner.manager.findBy(Lesson, { module: { id: moduleId } });
             this.logger.info(`${this.constructor.name}: Getting lessons for module with id ${moduleId}`);
             return lessons;
         } catch (error) {

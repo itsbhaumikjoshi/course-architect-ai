@@ -1,15 +1,7 @@
 import { Logger } from "@/helpers";
 import { Module } from "@/models";
+import { ICreateModule } from "@/types";
 import { QueryRunner } from "typeorm";
-
-export type CreateModule = {
-    title: string,
-    courseId: string,
-};
-
-export type GetModule = {
-    id: string,
-}
 
 export default class ModuleRepo {
     private logger;
@@ -17,9 +9,10 @@ export default class ModuleRepo {
         this.logger = Logger.getLogger();
     }
 
-    async create({ title, courseId }: CreateModule, queryRunner: QueryRunner): Promise<Module | null> {
+    async create({ id, title, courseId }: ICreateModule, queryRunner: QueryRunner): Promise<Module | null> {
         try {
             const module = await queryRunner.manager.create(Module, {
+                id: courseId+'#'+id,
                 course: courseId,
                 title
             });
@@ -32,7 +25,7 @@ export default class ModuleRepo {
         }
     }
 
-    async get({ id }: GetModule, queryRunner: QueryRunner): Promise<Module | null> {
+    async findById(id: string, queryRunner: QueryRunner): Promise<Module | null> {
         try {
             const module = await queryRunner.manager.findOneBy(Module, { id });
             this.logger.info(`${this.constructor.name}: Getting module with id ${id} result ${module != null}`);
