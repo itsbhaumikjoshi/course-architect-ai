@@ -46,7 +46,7 @@ export default class AuthRouter {
                 });
                 const token = await this.authService.login({ email, password });
                 if (!token) {
-                    return res.status(404).json({
+                    return res.status(400).json({
                         message: "Invalid email or password.",
                     });
                 }
