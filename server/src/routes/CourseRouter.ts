@@ -19,7 +19,7 @@ export default class CourseRouter {
     get() {
         this.router.get("/", this.authMiddleware.authenticate(), this.fetchAllCoursesForUser());
         this.router.post("/", this.authMiddleware.authenticate(), this.createCourse());
-        this.router.get("/:courseId/:moduleId", this.authMiddleware.authenticate(), this.fetchCourseModule());
+        this.router.get("/:courseId/:moduleId?", this.authMiddleware.authenticate(), this.fetchCourseModule());
         return this.router;
     }
 
@@ -27,7 +27,7 @@ export default class CourseRouter {
         return async (req: Request, res: Response, next: NextFunction) => {
             const userId = res.locals.userId;
             try {
-                const courses = await this.courseService.fetchAllFor(userId);
+                const courses = await this.courseService.findAllFor(userId);
                 res.status(200).json(courses);
             } catch (error) {
                 res.status(500).json({
@@ -39,7 +39,23 @@ export default class CourseRouter {
 
     private fetchCourseModule() {
         return async (req: Request, res: Response, next: NextFunction) => {
-
+            const courseId = req.params.courseId as string;
+            const moduleId = req.params.moduleId;
+            const userId = res.locals.userId;
+            if (!courseId) return res.status(400).json({
+                message: "Invalid Request."
+            });
+            try {
+                const module = await this.courseService.findCourseModule({ id: courseId, userId, moduleId });
+                if (!module) return res.status(404).json({
+                    message: "Module not found."
+                })
+                res.status(200).json(module);
+            } catch (error) {
+                res.status(500).json({
+                    error: error
+                });
+            }
         };
     }
 
