@@ -2,7 +2,14 @@ import { LLM } from "@/adapters";
 import { generatePrompt } from "@/const";
 import { AppDataSource, Logger } from "@/helpers";
 import { CourseRepo, LessonRepo, ModuleRepo } from "@/repository";
-import { CourseResponse, CreateCompleteCourse, DeleteCourse, LLMResponse } from "@/types";
+import {
+    ICourse,
+    ICreateCourseFromLLMResponse,
+    IDeleteCourse,
+    ILLMResponse,
+    ICourseModuleResponse,
+    IFindCourseByModuleId
+} from "@/types";
 
 export default class CourseService {
     private courseRepo: CourseRepo;
@@ -19,13 +26,13 @@ export default class CourseService {
         this.llmAdapter = new LLM();
     }
 
-    async fetchAllFor(userId: string): Promise<CourseResponse[]> {
+    async findAllFor(userId: string): Promise<ICourse[]> {
         const queryRunner = AppDataSource.getDataSource().createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
-        let courses: CourseResponse[] = [];
+        let courses: ICourse[] = [];
         try {
-            const response = await this.courseRepo.findForUserId(userId, queryRunner);
+            const response = await this.courseRepo.findByUserId(userId, queryRunner);
             courses = response.map(course => ({
                 id: course.id,
                 created_at: course.createdAt,
@@ -44,16 +51,49 @@ export default class CourseService {
         return courses;
     }
 
-    async create({ input, userId }: CreateCompleteCourse): Promise<CourseResponse | null> {
+    async findCourseModule({ id, moduleId, userId }: IFindCourseByModuleId): Promise<ICourseModuleResponse | null> {
         const queryRunner = AppDataSource.getDataSource().createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
-        let res: CourseResponse | null = null;
+        let res: ICourseModuleResponse | null = null;
+        try {
+            const course = await this.courseRepo.findById({ id, userId }, queryRunner);
+            if (course) {
+                const module = await this.moduleRepo.findById(`${id}#${moduleId ? moduleId : 1}`, queryRunner);
+                if (module) {
+                    const lessons = await this.lessonRepo.findByModuleId(module.id, queryRunner);
+                    if(lessons) {
+                        res = {
+                            id: module.id,
+                            title: module.title,
+                            courseId: module.courseId,
+                            lessons: lessons.map(lesson => ({ content: lesson.content, id: lesson.id }))
+                        };
+                    }
+                }
+            }
+            await queryRunner.commitTransaction();
+        } catch (error) {
+            await queryRunner.rollbackTransaction();
+            this.logger.error(`${this.constructor.name}: Error: ${error}`);
+            res = null;
+            throw error;
+        } finally {
+            await queryRunner.release();
+        }
+        return res;
+    }
+
+    async create({ input, userId }: ICreateCourseFromLLMResponse): Promise<ICourse | null> {
+        const queryRunner = AppDataSource.getDataSource().createQueryRunner();
+        await queryRunner.connect();
+        await queryRunner.startTransaction();
+        let res: ICourse | null = null;
         try {
             let response = await this.llmAdapter.fetch(generatePrompt(input));
             if (response) {
                 response = response.slice(response.indexOf('{'), response.lastIndexOf('}') + 1);
-                const llmResponse = JSON.parse(response) as LLMResponse;
+                const llmResponse = JSON.parse(response) as ILLMResponse;
                 this.logger.info(`${this.constructor.name}: LLM Response for user: ${userId}, input: ${input}, and ${llmResponse}`);
                 const course = await this.courseRepo.create({
                     title: llmResponse.title,
@@ -64,7 +104,7 @@ export default class CourseService {
                     throw new Error(`Failed to create the course for user: ${userId} and input: ${input}.`);
                 }
                 for (const chapter of llmResponse.modules) {
-                    const module = await this.moduleRepo.create({ courseId: course.id, title: chapter.title }, queryRunner);
+                    const module = await this.moduleRepo.create({ id: chapter.id, courseId: course.id, title: chapter.title }, queryRunner);
                     if (!module) throw new Error(`Failed to create module for ${userId} and input: ${input}`);
                     for (const subChapter of chapter.lessons) {
                         await this.lessonRepo.create({
@@ -91,12 +131,12 @@ export default class CourseService {
         return res;
     }
 
-    async delete({}: DeleteCourse): Promise<void> {
+    async delete(deleteCourse: IDeleteCourse): Promise<void> {
         const queryRunner = AppDataSource.getDataSource().createQueryRunner();
         await queryRunner.connect();
         await queryRunner.startTransaction();
         try {
-            
+            await this.courseRepo.softDeleteById(deleteCourse, queryRunner);
             await queryRunner.commitTransaction();
         } catch (error) {
             this.logger.error(`${this.constructor.name}: Error: ${error}`);
