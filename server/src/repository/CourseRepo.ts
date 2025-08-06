@@ -1,6 +1,6 @@
 import { Logger } from "@/helpers";
 import { Course, Lesson, Module } from "@/models";
-import { CreateCourse } from "@/types";
+import { ICreateCourse, IDeleteCourse, IFindCourseById } from "@/types";
 import { QueryRunner } from "typeorm";
 
 
@@ -10,7 +10,7 @@ export default class CourseRepo {
         this.logger = Logger.getLogger();
     }
 
-    async create({ title, description, userId }: CreateCourse, queryRunner: QueryRunner): Promise<Course | null> {
+    async create({ title, description, userId }: ICreateCourse, queryRunner: QueryRunner): Promise<Course | null> {
         try {
             const course = await queryRunner.manager.create(Course, {
                 title,
@@ -26,7 +26,7 @@ export default class CourseRepo {
         }
     }
 
-    async findForUserId(userId: string, queryRunner: QueryRunner): Promise<Course[]> {
+    async findByUserId(userId: string, queryRunner: QueryRunner): Promise<Course[]> {
         try {
             const courses = await queryRunner.manager.find(Course, {
                 where: {
@@ -42,9 +42,12 @@ export default class CourseRepo {
         }
     }
 
-    async findById(id: string, queryRunner: QueryRunner): Promise<Course | null> {
+    async findById({ id, userId }: IFindCourseById, queryRunner: QueryRunner): Promise<Course | null> {
         try {
-            const course = await queryRunner.manager.findOneBy(Course, { id });
+            const course = await queryRunner.manager.findOneBy(Course, {
+                id,
+                user: { id: userId }
+            });
             this.logger.info(`${this.constructor.name}: Getting course with id ${id} result ${course != null && course.deletedAt == null}`);
             return course?.deletedAt != null ? null : course;
         } catch (error) {
@@ -53,24 +56,27 @@ export default class CourseRepo {
         }
     }
 
-    async softDeleteById(id: string, queryRunner: QueryRunner): Promise<void> {
+    async softDeleteById({ courseId: id, userId }: IDeleteCourse, queryRunner: QueryRunner): Promise<void> {
         try {
-            await queryRunner.manager
-                .createQueryBuilder()
-                .softDelete()
-                .from(Lesson)
-                .where(qb => {
-                    const subQuery = qb
-                        .select("id")
-                        .from("module", "m")
-                        .where("m.courseId = :courseId", { courseId: id })
-                        .getQuery();
-                    return "lesson.moduleId IN " + subQuery;
-                })
-                .execute();
-            await queryRunner.manager.softDelete(Module, { course: { id } });
-            await queryRunner.manager.softDelete(Course, id);
-            this.logger.info(`${this.constructor.name}: Soft Deleting course -> modules -> lessons with id ${id} result ${true}`);
+            const course = await this.findById({ id, userId }, queryRunner); // making sure the course indeed belong to user from session
+            if(course) {
+                await queryRunner.manager
+                    .createQueryBuilder()
+                    .softDelete()
+                    .from(Lesson)
+                    .where(qb => {
+                        const subQuery = qb
+                            .select("id")
+                            .from("module", "m")
+                            .where("m.courseId = :courseId", { courseId: id })
+                            .getQuery();
+                        return "lesson.moduleId IN " + subQuery;
+                    })
+                    .execute();
+                await queryRunner.manager.softDelete(Module, { course: { id } });
+                await queryRunner.manager.softDelete(Course, id);
+                this.logger.info(`${this.constructor.name}: Soft Deleting course -> modules -> lessons with id ${id} result ${true}`);
+            }
         } catch (error) {
             this.logger.error(`${this.constructor.name}: Error: ${error}`);
             throw error;
