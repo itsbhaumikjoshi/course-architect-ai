@@ -55,8 +55,13 @@ export type IFindCourseByModuleId = {
 };
 
 export type ICourseModuleResponse = {
+    id: string,
     title: string,
-    
+    courseId: string,
+    lessons: {
+        content: string,
+        id: string,
+    }[]
 };
 
 export type IFindCourseById = {

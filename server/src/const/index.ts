@@ -57,11 +57,11 @@ mcq: "question", "options" (array of strings), "answer" (index)
 Use this DUMMY LESSON as your template:
 
 [
-  { "type": "heading", "text": "Introduction to AI" },
-  { "type": "paragraph","text": "Artificial intelligence (AI) is a rapidly evolving field..." },
-  { "type": "code", "language": "python", "text": "print('Hello, AI!')" },
-  { "type": "video", "url": "https://youtu.be/AI_Explained" },
-  { "type": "mcq",
+  { "id": <number>, "type": "heading", "text": "Introduction to AI" },
+  { "id": <number>, "type": "paragraph","text": "Artificial intelligence (AI) is a rapidly evolving field..." },
+  { "id": <number>, "type": "code", "language": "python", "text": "print('Hello, AI!')" },
+  { "id": <number>, "type": "video", "url": "https://youtu.be/AI_Explained" },
+  { "id": <number>, "type": "mcq",
     "question": "What is AI?",
     "options": ["A type of robot","A field of computer science","A programming language"],
     "answer": 1
