@@ -6,7 +6,7 @@ import {
     JoinColumn,
     ManyToOne,
     OneToMany,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
     RelationId,
     UpdateDateColumn
 } from "typeorm";
@@ -14,7 +14,7 @@ import { Course, Lesson } from "@/models";
 
 @Entity("modules")
 export default class Module {
-    @PrimaryGeneratedColumn("uuid")
+    @PrimaryColumn()
     public id!: string;
 
     @Column({ type: "varchar", length: "250", nullable: false })
