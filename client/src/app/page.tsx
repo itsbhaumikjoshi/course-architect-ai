@@ -1,12 +1,14 @@
+import Home from "@/components/Home";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-    title: "Home: Course Architect AI",
+  title: "Home: Course Architect AI",
 };
 
-export default function Home() {
+export default function HomePage() {
   return (
     <>
+      <Home />
     </>
   );
 }

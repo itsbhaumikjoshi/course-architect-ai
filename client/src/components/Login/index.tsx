@@ -8,7 +8,9 @@ import NextLink from "next/link";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import { Container, Wrapper } from "@/styles/Container";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -16,6 +18,19 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [error, setError] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/auth/google/login", {
+        withCredentials: true,
+      })
+      .then((response) => {
+        console.log(response.status);
+        console.log(response.data?.url);
+      })
+      .catch((e) => console.log(e));
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,7 +38,27 @@ export default function Login() {
       setError(true);
       return;
     }
-    window.alert(`${email} : ${password}`);
+    axios
+      .post(
+        "http://localhost:5000/api/auth/login",
+        {
+          email,
+          password,
+        },
+        {
+          withCredentials: true,
+          headers: {
+            // "X-url-encoder": "your-value",
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        if (response.status == 200) {
+          router.replace("/courses");
+        }
+      })
+      .catch((e) => console.log(e));
   };
 
   const handleEmailError = () => {

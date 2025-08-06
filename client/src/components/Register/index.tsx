@@ -10,6 +10,8 @@ import TextField from "@mui/material/TextField";
 import { Container, Wrapper } from "@/styles/Container";
 import { useReducer } from "react";
 import { emailRegex, passwordRegex } from "@/const";
+import axios from "axios";
+import { useRouter } from "next/navigation";
 
 type State = {
   email: string;
@@ -82,6 +84,7 @@ const errorReducer = (state: ErrorState, action: ErrorAction): ErrorState => {
 export default function Register() {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [error, dispatchError] = useReducer(errorReducer, initialErrorState);
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -95,7 +98,18 @@ export default function Register() {
       return;
     }
     dispatchError({ type: "error", value: false });
-    window.alert(`${state.email} : ${state.password}`);
+    axios
+      .post(
+        "http://localhost:5000/api/auth/register",
+        { email: state.email, password: state.password, name: state.name },
+        { withCredentials: true }
+      )
+      .then((res) => {
+        if (res.status == 200) {
+          router.replace("/courses");
+        }
+      })
+      .catch((e) => console.log(e));
   };
 
   const handleEmailError = () => {
@@ -153,7 +167,7 @@ export default function Register() {
       return;
     }
 
-    if (state.password.length < 10) {
+    if (state.name.length < 10) {
       dispatchError({
         type: "update",
         key: "nameError",
@@ -216,7 +230,7 @@ export default function Register() {
             // boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px"
             // boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px"
             // boxShadow: "rgba(0, 0, 0, 0.24) 0px 3px 8px"
-            boxShadow: "rgba(17, 12, 46, 0.15) 0px 48px 100px 0px"
+            boxShadow: "rgba(17, 12, 46, 0.15) 0px 48px 100px 0px",
           }}
         >
           {error.showError && (
@@ -332,7 +346,7 @@ export default function Register() {
               "&:hover": {
                 backgroundColor: "#f5f5f5",
               },
-              fontWeight: 500
+              fontWeight: 500,
             }}
             onClick={handleGoogleLogin}
           >
