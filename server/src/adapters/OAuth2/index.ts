@@ -1,1 +1,0 @@
-export { default as GoogleOAuth2Client } from "@/adapters/OAuth2/GoogleOAuth2Client";
