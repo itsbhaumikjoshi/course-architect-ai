@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -75,7 +76,7 @@ public class ErrorHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public ResponseEntity<ErrorResponse> noHandlerFound(NoHandlerFoundException noHandlerFoundException) {
         return ResponseEntity.status(405)
-                .body(new ErrorResponse(noHandlerFoundException.getMessage(), "FORBIDDEN"));
+                .body(new ErrorResponse(noHandlerFoundException.getMessage(), "METHOD_NOT_SUPPORTED"));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
@@ -140,6 +141,12 @@ public class ErrorHandler {
     public ResponseEntity<ErrorResponse> jsonParseError(JsonParseException jsonParseException) {
         return ResponseEntity.status(500)
                 .body(new ErrorResponse("Unable to parse json. Please try again", "INTERNAL_SERVER_ERROR"));
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<ErrorResponse> methodNotSupported(HttpRequestMethodNotSupportedException httpRequestMethodNotSupportedException) {
+        return ResponseEntity.status(405)
+                .body(new ErrorResponse(httpRequestMethodNotSupportedException.getMessage(), "METHOD_NOT_SUPPORTED"));
     }
 
     @ExceptionHandler(Exception.class)
