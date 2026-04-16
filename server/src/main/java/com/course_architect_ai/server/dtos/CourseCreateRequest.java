@@ -1,12 +1,14 @@
 package com.course_architect_ai.server.dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class CourseCreateRequest {
 
     @NotNull
-//    @Size(min = 10, max = 150)
+    @NotBlank
+    @Size(min = 10, max = 150)
     private String prompt;
 
     public CourseCreateRequest() {}
