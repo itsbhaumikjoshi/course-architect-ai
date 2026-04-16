@@ -7,7 +7,10 @@ import com.course_architect_ai.server.dtos.genai.create.GenAICourse;
 import com.course_architect_ai.server.entities.Content;
 import com.course_architect_ai.server.entities.Course;
 import com.course_architect_ai.server.entities.User;
+import com.course_architect_ai.server.errors.NotFoundException;
 import com.course_architect_ai.server.repositories.CourseRepo;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +35,7 @@ public class CourseService {
     }
 
     @Transactional
-    public Course create(final CourseCreateRequest courseCreateRequest, final User user) throws Exception {
+    public Course create(final CourseCreateRequest courseCreateRequest, final User user) throws JsonProcessingException, JsonMappingException {
         String response = genAI.fetch(courseCreateRequest.getPrompt());
         GenAICourse genAICourse = mapper.readValue(response, GenAICourse.class);
         Course course = new Course();
@@ -55,7 +58,7 @@ public class CourseService {
     }
 
     public Course find(final UUID id, final UUID userId) {
-        return courseRepo.findByIdAndUserId(id, userId).orElseThrow();
+        return courseRepo.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Course not found with " + id + " for " + userId + " does not exists"));
     }
 
     public void remove(final UUID id, final UUID userId) {

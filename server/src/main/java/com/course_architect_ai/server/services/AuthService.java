@@ -5,6 +5,7 @@ import com.course_architect_ai.server.dtos.auth.AuthRequest;
 import com.course_architect_ai.server.dtos.auth.AuthResponse;
 import com.course_architect_ai.server.dtos.auth.RegisterRequest;
 import com.course_architect_ai.server.entities.User;
+import com.course_architect_ai.server.errors.NotFoundException;
 import com.course_architect_ai.server.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -35,7 +36,7 @@ public class AuthService {
                 authRequest.getPassword()
         ));
 
-        User user = userRepo.findByEmail(authRequest.getEmail()).orElseThrow();
+        User user = userRepo.findByEmail(authRequest.getEmail()).orElseThrow(() -> new NotFoundException("User with email: " + authRequest.getEmail() + " does not exists."));
         String token = issueJWTToken(user);
 
         return new AuthResponse(
