@@ -1,6 +1,7 @@
 package com.course_architect_ai.server.controllers;
 
 import com.course_architect_ai.server.dtos.CourseCreateRequest;
+import com.course_architect_ai.server.dtos.CourseUpdateTitleRequest;
 import com.course_architect_ai.server.entities.Course;
 import com.course_architect_ai.server.security.UserInfo;
 import com.course_architect_ai.server.services.CourseService;
@@ -30,6 +31,21 @@ public class CourseController {
                 courseService.create(
                         courseCreateRequest,
                         userInfo.to()
+                )
+        );
+    }
+
+    @PutMapping("/{courseId}")
+    public ResponseEntity<Course> updateTitle(
+            @AuthenticationPrincipal UserInfo userInfo,
+            @Valid @PathVariable UUID courseId,
+            @RequestBody CourseUpdateTitleRequest courseUpdateTitleRequest
+    ) {
+        return ResponseEntity.status(200).body(
+                courseService.updateTitle(
+                        courseId,
+                        userInfo.getId(),
+                        courseUpdateTitleRequest.getTitle()
                 )
         );
     }

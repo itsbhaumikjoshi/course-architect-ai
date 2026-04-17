@@ -77,7 +77,7 @@ public class Constants {
 
     public static String model = "gemini-2.0-flash";
 
-    public static final String PROMPT_ENHANCE_CONTENT = """
+    private static final String PROMPT_ENHANCE_CONTENT = """
                 You are an expert curriculum enhancer.
                 
                 TASK:

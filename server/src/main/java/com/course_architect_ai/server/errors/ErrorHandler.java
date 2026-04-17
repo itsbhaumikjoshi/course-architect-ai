@@ -37,6 +37,14 @@ public class ErrorHandler {
         ));
     }
 
+    @ExceptionHandler(EnhanceException.class)
+    public ResponseEntity<ErrorResponse> enhanceError(EnhanceException enhanceException) {
+        return ResponseEntity.status(400).body(new ErrorResponse(
+                enhanceException.getMessage(),
+                "BAD_REQUEST"
+        ));
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErrorResponse> handleConstraint(ConstraintViolationException constraintViolationException) {
         return ResponseEntity.status(400).body(new ErrorResponse(

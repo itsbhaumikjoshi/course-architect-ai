@@ -1,9 +1,11 @@
 package com.course_architect_ai.server.services;
 
 import com.course_architect_ai.server.adapters.GenAI;
+import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.GenAIConfig;
 import com.course_architect_ai.server.dtos.CourseCreateRequest;
 import com.course_architect_ai.server.dtos.genai.create.GenAICourse;
+import com.course_architect_ai.server.dtos.genai.create.SerializeChapter;
 import com.course_architect_ai.server.entities.Content;
 import com.course_architect_ai.server.entities.Course;
 import com.course_architect_ai.server.entities.User;
@@ -36,7 +38,11 @@ public class CourseService {
 
     @Transactional
     public Course create(final CourseCreateRequest courseCreateRequest, final User user) throws JsonProcessingException, JsonMappingException {
-        String response = genAI.fetch(courseCreateRequest.getPrompt());
+        String response = genAI.fetch(
+                Constants.getCourseCreationPrompt(
+                        courseCreateRequest.getPrompt()
+                )
+        );
         GenAICourse genAICourse = mapper.readValue(response, GenAICourse.class);
         Course course = new Course();
         course.setTitle(genAICourse.getTitle());
@@ -50,7 +56,11 @@ public class CourseService {
             content.setUser(user);
             content.setCourse(course);
             content.setId(course.getId().toString() + '#' + i);
-            String text = mapper.writeValueAsString(genAICourse.getChapters().get(i));
+            SerializeChapter serializeChapter = new SerializeChapter(
+                    genAICourse.getChapters().get(i).getSegments(),
+                    genAICourse.getChapters().get(i).getQuiz()
+            );
+            String text = mapper.writeValueAsString(serializeChapter);
             content.setText(text);
             contentService.create(content);
         }
@@ -59,6 +69,13 @@ public class CourseService {
 
     public Course find(final UUID id, final UUID userId) {
         return courseRepo.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Course not found with " + id + " for " + userId + " does not exists"));
+    }
+
+    public Course updateTitle(final UUID id, final UUID userId, final String title) {
+        Course course = find(id, userId);
+        course.setTitle(title);
+        courseRepo.save(course);
+        return course;
     }
 
     public void remove(final UUID id, final UUID userId) {

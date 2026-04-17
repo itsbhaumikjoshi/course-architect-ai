@@ -38,6 +38,10 @@ public class Course {
     @Column(nullable = false, length = 1000)
     private String description;
 
+//    Column exists to prevent multiple enhancement because this is a side project.
+    @Column(columnDefinition = "BOOLEAN DEFAULT FALSE")
+    private boolean isEnhanced = false;
+
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     private OffsetDateTime createdAt;
@@ -47,6 +51,14 @@ public class Course {
     public Course(UUID id, @NotNull String title, @NotNull String description, OffsetDateTime createdAt) {
         this.id = id;
         this.title = title;
+        this.description = description;
+        this.createdAt = createdAt;
+    }
+
+    public Course(UUID id, @NotNull String title, @NotNull String description, OffsetDateTime createdAt, boolean isEnhanced) {
+        this.id = id;
+        this.title = title;
+        this.isEnhanced = isEnhanced;
         this.description = description;
         this.createdAt = createdAt;
     }
@@ -91,6 +103,14 @@ public class Course {
         this.description = description;
     }
 
+    public boolean isEnhanced() {
+        return isEnhanced;
+    }
+
+    public void setEnhanced(boolean enhanced) {
+        isEnhanced = enhanced;
+    }
+
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
@@ -106,6 +126,7 @@ public class Course {
                 ", userId=" + userId +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
+                ", isEnhanced=" + isEnhanced +
                 ", createdAt=" + createdAt +
                 '}';
     }
