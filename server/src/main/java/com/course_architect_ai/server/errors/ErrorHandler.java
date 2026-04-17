@@ -3,6 +3,7 @@ package com.course_architect_ai.server.errors;
 import com.course_architect_ai.server.dtos.ErrorResponse;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import io.jsonwebtoken.JwtException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.boot.json.JsonParseException;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -41,6 +42,14 @@ public class ErrorHandler {
     public ResponseEntity<ErrorResponse> enhanceError(EnhanceException enhanceException) {
         return ResponseEntity.status(400).body(new ErrorResponse(
                 enhanceException.getMessage(),
+                "BAD_REQUEST"
+        ));
+    }
+
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity<ErrorResponse> jwtError(JwtException jwtException) {
+        return ResponseEntity.status(400).body(new ErrorResponse(
+                jwtException.getMessage(),
                 "BAD_REQUEST"
         ));
     }
