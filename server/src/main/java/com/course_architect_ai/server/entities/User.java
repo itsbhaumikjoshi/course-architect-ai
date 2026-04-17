@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Entity
@@ -39,6 +41,10 @@ public class User {
     @JsonIgnore
     private String password;
 
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private OffsetDateTime createdAt;
+
     public User() {}
 
     public User(@NotNull() String firstName, @NotNull() String lastName, String email, @NotNull() String password) {
@@ -48,11 +54,12 @@ public class User {
         this.password = password;
     }
 
-    public User(@NotNull() String firstName, @NotNull() String lastName, String email, @NotNull() UUID id) {
+    public User(@NotNull() String firstName, @NotNull() String lastName, String email, @NotNull() UUID id, OffsetDateTime createdAt) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.id = id;
+        this.createdAt = createdAt;
     }
 
     public User(UUID id, @NotNull() String firstName, @NotNull() String lastName, String email, @NotNull() String password) {
@@ -61,6 +68,15 @@ public class User {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+    }
+
+    public User(UUID id, @NotNull() String firstName, @NotNull() String lastName, @NotNull String email, @NotNull() String password, OffsetDateTime createdAt) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.password = password;
+        this.createdAt = createdAt;
     }
 
     public UUID getId() {
@@ -103,13 +119,22 @@ public class User {
         this.password = password;
     }
 
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 }

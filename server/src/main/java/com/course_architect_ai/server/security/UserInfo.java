@@ -4,6 +4,7 @@ import com.course_architect_ai.server.entities.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.OffsetDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -15,6 +16,7 @@ public class UserInfo implements UserDetails {
     private String password;
     private String firstName;
     private String lastName;
+    private OffsetDateTime createdAt;
 
     public UserInfo() {}
 
@@ -24,6 +26,15 @@ public class UserInfo implements UserDetails {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
+    }
+
+    public UserInfo(UUID id, String email, String password, String firstName, String lastName, OffsetDateTime createdAt) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.createdAt = createdAt;
     }
 
     public UserInfo(UUID id, String email, String firstName, String lastName) {
@@ -69,6 +80,14 @@ public class UserInfo implements UserDetails {
         this.lastName = lastName;
     }
 
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(OffsetDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "UserInfo{" +
@@ -76,6 +95,7 @@ public class UserInfo implements UserDetails {
                 ", email='" + email + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 
@@ -84,7 +104,8 @@ public class UserInfo implements UserDetails {
                 getFirstName(),
                 getLastName(),
                 getEmail(),
-                getId()
+                getId(),
+                getCreatedAt()
         );
     }
 
@@ -94,7 +115,8 @@ public class UserInfo implements UserDetails {
                 user.getEmail(),
                 user.getPassword(),
                 user.getFirstName(),
-                user.getLastName()
+                user.getLastName(),
+                user.getCreatedAt()
         );
     }
 
