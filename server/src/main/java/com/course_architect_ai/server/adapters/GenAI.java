@@ -17,7 +17,7 @@ public class GenAI {
     public String fetch(String prompt) {
         return client.models.generateContent(
                 Constants.model,
-                Constants.genPrompt(prompt),
+                prompt,
                 null
         ).text();
     }

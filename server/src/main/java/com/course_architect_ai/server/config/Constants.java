@@ -181,11 +181,15 @@ public class Constants {
                 
                 USER INPUT:
                 <User Prompt Start>
-                {{USER_INPUT}}
+                %s
                 <User Prompt End>
             """;
 
-    public static String genPrompt(String userCourseDes) {
+    public static String getCourseCreationPrompt(String userCourseDes) {
         return PROMPT_GENERATE_COURSE.formatted(userCourseDes);
+    }
+
+    public static String getCourseEnhancementPrompt(String content) {
+        return PROMPT_ENHANCE_CONTENT.formatted(content);
     }
 }
