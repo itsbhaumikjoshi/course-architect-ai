@@ -71,6 +71,10 @@ public class CourseService {
         return courseRepo.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Course not found with " + id + " for " + userId + " does not exists"));
     }
 
+    public Course[] findAllForUser(final UUID userId) {
+        return courseRepo.findByUserId(userId);
+    }
+
     public Course updateTitle(final UUID id, final UUID userId, final String title) {
         Course course = find(id, userId);
         course.setTitle(title);

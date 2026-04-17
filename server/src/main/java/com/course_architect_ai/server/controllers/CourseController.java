@@ -25,6 +25,13 @@ public class CourseController {
         return ResponseEntity.status(200).body(courseService.find(id, userInfo.getId()));
     }
 
+    @GetMapping("/")
+    public ResponseEntity<Course[]> findAllForUser(@AuthenticationPrincipal UserInfo userInfo) {
+        return ResponseEntity.status(200).body(
+                courseService.findAllForUser(userInfo.getId())
+        );
+    }
+
     @PostMapping()
     public ResponseEntity<Course> create(@AuthenticationPrincipal UserInfo userInfo, @Valid @RequestBody CourseCreateRequest courseCreateRequest) throws Exception {
         return ResponseEntity.status(201).body(

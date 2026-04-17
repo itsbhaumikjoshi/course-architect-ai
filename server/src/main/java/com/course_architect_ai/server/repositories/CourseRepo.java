@@ -10,4 +10,6 @@ public interface CourseRepo extends JpaRepository<Course, UUID> {
     Optional<Course> findByIdAndUserId(final UUID id, final UUID userId);
 
     void deleteByIdAndUserId(final UUID id, final UUID userId);
+
+    Course[] findByUserId(final UUID userId);
 }
