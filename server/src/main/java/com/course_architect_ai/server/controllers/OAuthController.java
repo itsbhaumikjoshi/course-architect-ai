@@ -20,7 +20,7 @@ public class OAuthController {
     private long expiresInMin;
 
     @GetMapping("/google")
-    public ResponseEntity<AuthResponse> callback(@RequestParam("code") String code) {
+    public ResponseEntity<Void> callback(@RequestParam("code") String code) {
         AuthResponse authResponse = googleOAuthService.callback(code);
         ResponseCookie responseCookie = ResponseCookie.from("sid", authResponse.getToken())
                 .httpOnly(true)
@@ -32,7 +32,7 @@ public class OAuthController {
         return ResponseEntity
                 .status(200)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(authResponse);
+                .build();
     }
 
 }

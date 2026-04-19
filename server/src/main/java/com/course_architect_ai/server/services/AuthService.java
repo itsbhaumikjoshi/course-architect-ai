@@ -39,11 +39,7 @@ public class AuthService {
         User user = userRepo.findByEmail(authRequest.getEmail()).orElseThrow(() -> new NotFoundException("User with email: " + authRequest.getEmail() + " does not exists."));
         String token = issueJWTToken(user);
 
-        return new AuthResponse(
-                token,
-                user.getFirstName(),
-                user.getLastName()
-        );
+        return new AuthResponse(token);
     }
 
     @Transactional
@@ -62,11 +58,7 @@ public class AuthService {
         User savedUser = userRepo.save(user);
         String token = issueJWTToken(savedUser);
 
-        return new AuthResponse(
-                token,
-                savedUser.getFirstName(),
-                savedUser.getLastName()
-        );
+        return new AuthResponse(token);
     }
 
     private String issueJWTToken(User user) {

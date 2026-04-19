@@ -26,7 +26,7 @@ public class AuthController {
     private long expiresInMin;
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@Valid @RequestBody AuthRequest authRequest) {
+    public ResponseEntity<Void> login(@Valid @RequestBody AuthRequest authRequest) {
         AuthResponse authResponse = authService.login(authRequest);
         ResponseCookie responseCookie = ResponseCookie.from("sid", authResponse.getToken())
                 .httpOnly(true)
@@ -38,11 +38,11 @@ public class AuthController {
         return ResponseEntity
                 .status(200)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(authResponse);
+                .build();
     }
 
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody RegisterRequest registerRequest) {
+    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest registerRequest) {
         AuthResponse authResponse = authService.register(registerRequest);
         ResponseCookie responseCookie = ResponseCookie.from("sid", authResponse.getToken())
                 .httpOnly(true)
@@ -54,6 +54,6 @@ public class AuthController {
         return ResponseEntity
                 .status(201)
                 .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                .body(authResponse);
+                .build();
     }
 }

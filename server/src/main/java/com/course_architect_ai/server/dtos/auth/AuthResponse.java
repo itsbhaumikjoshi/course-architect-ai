@@ -12,22 +12,10 @@ public class AuthResponse {
     @JsonIgnore
     private String token;
 
-    @NotNull
-    @NotBlank
-    @JsonProperty("first_name")
-    private String firstName;
-
-    @NotNull
-    @NotBlank
-    @JsonProperty("last_name")
-    private String lastName;
-
     public AuthResponse() {}
 
-    public AuthResponse(String token, String firstName, String lastName) {
+    public AuthResponse(String token) {
         this.token = token;
-        this.firstName = firstName;
-        this.lastName = lastName;
     }
 
     public String getToken() {
@@ -36,30 +24,5 @@ public class AuthResponse {
 
     public void setToken(String token) {
         this.token = token;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    @Override
-    public String toString() {
-        return "AuthResponse{" +
-                "token='" + token + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                '}';
     }
 }

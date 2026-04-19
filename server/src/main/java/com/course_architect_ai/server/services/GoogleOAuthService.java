@@ -1,5 +1,6 @@
 package com.course_architect_ai.server.services;
 
+import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.GoogleOAuthConfig;
 import com.course_architect_ai.server.dtos.JWTPayload;
 import com.course_architect_ai.server.dtos.auth.AuthResponse;
@@ -81,11 +82,7 @@ public class GoogleOAuthService {
                     return userRepo.save(newUser);
                 });
         String token = jwtService.create(new JWTPayload(user.getEmail(), user.getId()));
-        return new AuthResponse(
-                token,
-                user.getFirstName(),
-                user.getLastName()
-        );
+        return new AuthResponse(token);
     }
 
 }
