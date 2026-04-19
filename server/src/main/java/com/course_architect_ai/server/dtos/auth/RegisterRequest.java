@@ -18,12 +18,12 @@ public class RegisterRequest {
     private String password;
 
     @NotNull
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @JsonProperty("first_name")
     private String firstName;
 
     @NotNull
-    @Size(min = 5, max = 100)
+    @Size(min = 3, max = 100)
     @JsonProperty("last_name")
     private String lastName;
 

@@ -22,12 +22,12 @@ public class User {
     private UUID id;
 
     @NotNull()
-    @Size(min = 5, max = 150)
+    @Size(min = 3, max = 150)
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @NotNull()
-    @Size(min = 5, max = 150)
+    @Size(min = 3, max = 150)
     @Column(name = "last_name", nullable = false)
     private String lastName;
 
