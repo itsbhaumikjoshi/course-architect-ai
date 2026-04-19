@@ -15,6 +15,7 @@
     "@mui/icons-material": "^9.0.0",
     "@mui/material": "^9.0.0",
     "@mui/utils": "^9.0.0",
+    "axios": "^1.15.1",
     "clsx": "^2.1.1",
     "prop-types": "^15.8.1",
     "react": "^19.2.4",
