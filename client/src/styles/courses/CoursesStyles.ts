@@ -66,7 +66,6 @@ export const cardStyle: SxProps<Theme> = {
   overflow: 'hidden',
   cursor: 'pointer',
   '&:hover': {
-    transform: 'translateY(-6px)',
     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.05), 0 10px 10px -5px rgba(0, 0, 0, 0.02)',
     borderColor: 'rgba(226, 232, 240, 1)',
   }

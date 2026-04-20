@@ -28,6 +28,7 @@ const SegmentRenderer: React.FC<Props> = ({ segments }) => {
           case 'video_url':
             return <VideoEmbed key={index} segment={segment} />;
           case 'reference':
+          case 'tip':
             return <ReferenceBlock key={index} segment={segment} />;
           default:
             return null;

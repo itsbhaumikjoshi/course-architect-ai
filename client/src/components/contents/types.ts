@@ -1,4 +1,4 @@
-export type SegmentType = 'text' | 'code' | 'url' | 'video_url' | 'reference';
+export type SegmentType = 'text' | 'code' | 'url' | 'video_url' | 'reference' | 'tip';
 
 export interface Segment {
   type: SegmentType;
@@ -17,6 +17,8 @@ export interface Chapter {
   description: string;
   segments: Segment[];
   quiz: QuizQuestion[];
+  totalContents: number;
+  enhanced: boolean;
 }
 
 export interface ContentData {

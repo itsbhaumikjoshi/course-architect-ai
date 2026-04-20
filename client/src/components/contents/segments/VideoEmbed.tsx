@@ -8,6 +8,18 @@ interface Props {
 }
 
 const VideoEmbed: React.FC<Props> = ({ segment }) => {
+
+  const toYouTubeEmbedUrl = (url: string): string =>{
+    const u = new URL(url);
+    const videoId = u.searchParams.get("v");
+
+    if (!videoId) {
+      throw new Error(`No video ID found in URL: ${url}`);
+    }
+
+    return `https://www.youtube.com/embed/${videoId}`;
+  }
+
   return (
     <Box sx={{ mb: 4 }}>
       {segment.title && (
@@ -17,7 +29,7 @@ const VideoEmbed: React.FC<Props> = ({ segment }) => {
       )}
       <Box sx={videoContainerStyle}>
         <iframe
-          src={segment.value}
+          src={toYouTubeEmbedUrl(segment.value)}
           title={segment.title || "Video player"}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen
