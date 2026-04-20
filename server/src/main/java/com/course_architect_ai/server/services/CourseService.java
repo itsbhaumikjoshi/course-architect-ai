@@ -83,7 +83,10 @@ public class CourseService {
         return course;
     }
 
+    @Transactional
     public void remove(final UUID id, final UUID userId) {
+        Course course = find(id, userId);
+        contentService.deleteAllWithCourseId(course.getId());
         courseRepo.deleteByIdAndUserId(id, userId);
     }
 }
