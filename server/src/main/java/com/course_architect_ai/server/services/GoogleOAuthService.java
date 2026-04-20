@@ -44,7 +44,7 @@ public class GoogleOAuthService {
 
     public AuthResponse callback(String code) {
         Map<String, Object> tokenResponse = webClient.post()
-                .uri("https://oauth2.googleapis.com/token")
+                .uri(Constants.GOOGLE_OAUTH_TOKEN_URL)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .bodyValue(
                         "code=" + code +
@@ -60,7 +60,7 @@ public class GoogleOAuthService {
         String accessToken = (String) tokenResponse.get("access_token");
 
         Map<String, Object> userInfo = webClient.get()
-                .uri("https://www.googleapis.com/oauth2/v2/userinfo")
+                .uri(Constants.GOOGLE_OAUTH_USER_INFO_URL)
                 .headers(h -> h.setBearerAuth(accessToken))
                 .retrieve()
                 .bodyToMono(Map.class)
@@ -70,6 +70,7 @@ public class GoogleOAuthService {
         String firstName = (String) userInfo.get("given_name");
         String lastName = (String) userInfo.get("family_name");
         byte[] bytes = new byte[32];
+        secureRandom.nextBytes(bytes);
         String password = Base64.getEncoder().withoutPadding().encodeToString(bytes);
         User user = userRepo.findByEmail(email)
                 .orElseGet(() -> {
@@ -77,7 +78,7 @@ public class GoogleOAuthService {
                             firstName != null ? firstName : "Google",
                             lastName != null ? lastName : "User",
                             email,
-                            password
+                            passwordEncoder.encode(password)
                     );
                     return userRepo.save(newUser);
                 });
