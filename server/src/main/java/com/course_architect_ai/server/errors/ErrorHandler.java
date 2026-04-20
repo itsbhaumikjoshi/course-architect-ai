@@ -166,6 +166,25 @@ public class ErrorHandler {
                 .body(new ErrorResponse(httpRequestMethodNotSupportedException.getMessage(), "METHOD_NOT_SUPPORTED"));
     }
 
+    @ExceptionHandler(MaxLimitReachedException.class)
+    public ResponseEntity<ErrorResponse> maxLimitError(
+            MaxLimitReachedException maxLimitReachedException
+    ) {
+        return ResponseEntity.status(429)
+                .body(new ErrorResponse(
+                        maxLimitReachedException.getMessage(),
+                        "TOO_MANY_REQUEST"
+                ));
+    }
+
+    @ExceptionHandler(GenAIException.class)
+    public ResponseEntity<ErrorResponse> genAIException(GenAIException genAIException) {
+        return ResponseEntity.status(500).body(new ErrorResponse(
+                genAIException.getMessage(),
+                "GEN_AI_EXCEPTION"
+        ));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exception() {
         return ResponseEntity.status(500).body(new ErrorResponse(
