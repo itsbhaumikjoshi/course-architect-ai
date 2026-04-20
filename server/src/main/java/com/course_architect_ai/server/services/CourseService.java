@@ -5,10 +5,10 @@ import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.GenAIConfig;
 import com.course_architect_ai.server.dtos.CourseCreateRequest;
 import com.course_architect_ai.server.dtos.genai.create.GenAICourse;
-import com.course_architect_ai.server.dtos.genai.create.SerializeChapter;
 import com.course_architect_ai.server.entities.Content;
 import com.course_architect_ai.server.entities.Course;
 import com.course_architect_ai.server.entities.User;
+import com.course_architect_ai.server.errors.MaxLimitReachedException;
 import com.course_architect_ai.server.errors.NotFoundException;
 import com.course_architect_ai.server.repositories.CourseRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.UUID;
 
@@ -31,13 +32,17 @@ public class CourseService {
     private GenAI genAI;
     private final ObjectMapper mapper;
 
-    public CourseService(GenAIConfig genAIConfig) {
-        genAI = new GenAI(genAIConfig);
+    public CourseService(GenAIConfig genAIConfig, WebClient webClient) {
         mapper = new ObjectMapper();
+        this.genAI = new GenAI(genAIConfig);
     }
 
     @Transactional
     public Course create(final CourseCreateRequest courseCreateRequest, final User user) throws JsonProcessingException, JsonMappingException {
+        int totalCourses = courseRepo.countByUserId(user.getId());
+        if(totalCourses >= 5) {
+            throw new MaxLimitReachedException("One user can have at most 5 courses");
+        }
         String response = genAI.fetch(
                 Constants.getCourseCreationPrompt(
                         courseCreateRequest.getPrompt()
@@ -56,11 +61,7 @@ public class CourseService {
             content.setUser(user);
             content.setCourse(course);
             content.setId(course.getId().toString() + '#' + i);
-            SerializeChapter serializeChapter = new SerializeChapter(
-                    genAICourse.getChapters().get(i).getSegments(),
-                    genAICourse.getChapters().get(i).getQuiz()
-            );
-            String text = mapper.writeValueAsString(serializeChapter);
+            String text = mapper.writeValueAsString(genAICourse.getChapters().get(i));
             content.setText(text);
             contentService.create(content);
         }
