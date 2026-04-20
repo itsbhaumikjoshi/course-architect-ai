@@ -10,4 +10,6 @@ public interface ContentRepo extends JpaRepository<Content, String> {
     Optional<Content> findByIdAndUserId(final String id, final UUID userId);
 
     int countByCourseId(final UUID courseId);
+
+    void deleteByCourseId(final UUID courseId);
 }
