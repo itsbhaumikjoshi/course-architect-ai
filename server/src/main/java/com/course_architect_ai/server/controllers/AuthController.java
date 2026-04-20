@@ -4,16 +4,13 @@ import com.course_architect_ai.server.dtos.auth.AuthRequest;
 import com.course_architect_ai.server.dtos.auth.AuthResponse;
 import com.course_architect_ai.server.dtos.auth.RegisterRequest;
 import com.course_architect_ai.server.services.AuthService;
-import com.google.common.net.HttpHeaders;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/auth")
@@ -33,7 +30,23 @@ public class AuthController {
                 .secure(true)
                 .path("/")
                 .maxAge(expiresInMin * 60)
-                .sameSite("Strict")
+                .sameSite("None")
+                .build();
+        return ResponseEntity
+                .status(200)
+                .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                .build();
+    }
+
+    // This should be handled using sessions or Redis, since JWTs cannot be invalidated unless they are tracked via jti.
+    @GetMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        ResponseCookie responseCookie = ResponseCookie.from("sid", null)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("None")
                 .build();
         return ResponseEntity
                 .status(200)
@@ -49,7 +62,7 @@ public class AuthController {
                 .secure(true)
                 .path("/")
                 .maxAge(expiresInMin * 60)
-                .sameSite("Strict")
+                .sameSite("None")
                 .build();
         return ResponseEntity
                 .status(201)
