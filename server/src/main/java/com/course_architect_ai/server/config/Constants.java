@@ -2,6 +2,14 @@ package com.course_architect_ai.server.config;
 
 public class Constants {
 
+    public static String MODEL = "llama-3.1-8b-instant";
+
+    public static final String GEN_AI_URL = "https://api.groq.com/openai/v1/chat/completions";
+
+    public static final String GOOGLE_OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
+
+    public static final String GOOGLE_OAUTH_USER_INFO_URL = "https://oauth2.googleapis.com/token";
+
     private static final String PROMPT_GENERATE_COURSE = """
                 You are an expert curriculum designer.
                 
@@ -38,7 +46,7 @@ public class Constants {
                       "description": string (min 100, max 500 chars),
                       "segments": [
                         {
-                          "type": one of ["code", "text", "url", "video_url", "reference"],
+                          "type": one of ["code", "text", "url", "video_url", "reference", "tip"],
                           "title": string (min 10, max 100 chars),
                           "value": string
                         }
@@ -69,13 +77,19 @@ public class Constants {
                 - Avoid redundancy.
                 - Keep content concise but meaningful.
                 
+                CRITICAL OUTPUT RULE:
+                - Return ONLY the raw JSON object.
+                - Do NOT wrap it in markdown code fences (no ```json, no ```).
+                - Do NOT include any text before or after the JSON.
+                - The very first character of your response must be '{' and the last must be '}'.
+                
                 USER INPUT:
                 <User Prompt Start>
                 %s
                 <User Prompt End>
+                
+                Remember: raw JSON only. No markdown. No backticks. Start your response with '{'.
             """;
-
-    public static String model = "gemini-2.0-flash";
 
     private static final String PROMPT_ENHANCE_CONTENT = """
                 You are an expert curriculum enhancer.
@@ -179,10 +193,18 @@ public class Constants {
                 - The output MUST include the same "title" and "description" as input (unchanged).
                 - Ensure all constraints are satisfied before returning output.
                 
+                CRITICAL OUTPUT RULE:
+                - Return ONLY the raw JSON object.
+                - Do NOT wrap it in markdown code fences (no ```json, no ```).
+                - Do NOT include any text before or after the JSON.
+                - The very first character of your response must be '{' and the last must be '}'.
+                
                 USER INPUT:
                 <User Prompt Start>
                 %s
                 <User Prompt End>
+                
+                Remember: raw JSON only. No markdown. No backticks. Start your response with '{'.
             """;
 
     public static String getCourseCreationPrompt(String userCourseDes) {
@@ -192,4 +214,5 @@ public class Constants {
     public static String getCourseEnhancementPrompt(String content) {
         return PROMPT_ENHANCE_CONTENT.formatted(content);
     }
+
 }

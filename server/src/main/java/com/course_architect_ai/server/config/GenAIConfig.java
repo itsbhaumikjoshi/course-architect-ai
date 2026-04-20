@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConfigurationProperties(prefix = "google.genai.api")
+@ConfigurationProperties(prefix = "gen.ai.api")
 public class GenAIConfig {
 
     private String key;
