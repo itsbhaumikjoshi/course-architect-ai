@@ -4,7 +4,6 @@ import com.course_architect_ai.server.adapters.GenAI;
 import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.GenAIConfig;
 import com.course_architect_ai.server.dtos.genai.create.Chapter;
-import com.course_architect_ai.server.dtos.genai.create.SerializeChapter;
 import com.course_architect_ai.server.entities.Content;
 import com.course_architect_ai.server.errors.EnhanceException;
 import com.course_architect_ai.server.errors.NotFoundException;
@@ -38,7 +37,9 @@ public class ContentService {
         and for each course, the contents shall be sorted (1, 2, 3, ...).
      */
     public Content find(final String id, final UUID userId) {
-        return contentRepo.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Content with id: " + id + " for " + userId + " does not exists"));
+        Content content = contentRepo.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Content with id: " + id + " for " + userId + " does not exists"));
+        content.setTotalContents(contentRepo.countByCourseId(content.getCourseId()));
+        return content;
     }
 
     public Content enhance(final String id, final UUID userId) throws JsonMappingException, JsonProcessingException {
@@ -51,8 +52,7 @@ public class ContentService {
         );
         String response = genAI.fetch(prompt);
         Chapter chapter = mapper.readValue(response, Chapter.class);
-        SerializeChapter serializeChapter = new SerializeChapter(chapter.getSegments(), chapter.getQuiz());
-        String text = mapper.writeValueAsString(serializeChapter);
+        String text = mapper.writeValueAsString(chapter);
         content.setText(text);
         contentRepo.save(content);
         return content;
