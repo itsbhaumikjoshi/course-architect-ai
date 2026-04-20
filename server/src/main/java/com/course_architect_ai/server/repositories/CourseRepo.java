@@ -12,4 +12,6 @@ public interface CourseRepo extends JpaRepository<Course, UUID> {
     void deleteByIdAndUserId(final UUID id, final UUID userId);
 
     Course[] findByUserId(final UUID userId);
+
+    int countByUserId(final UUID userId);
 }
