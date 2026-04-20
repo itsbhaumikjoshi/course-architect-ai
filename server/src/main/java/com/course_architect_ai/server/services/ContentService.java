@@ -5,14 +5,17 @@ import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.GenAIConfig;
 import com.course_architect_ai.server.dtos.genai.create.Chapter;
 import com.course_architect_ai.server.entities.Content;
+import com.course_architect_ai.server.entities.Course;
 import com.course_architect_ai.server.errors.EnhanceException;
 import com.course_architect_ai.server.errors.NotFoundException;
 import com.course_architect_ai.server.repositories.ContentRepo;
+import com.course_architect_ai.server.repositories.CourseRepo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
@@ -21,6 +24,9 @@ public class ContentService {
 
     @Autowired
     private ContentRepo contentRepo;
+
+    @Autowired
+    private CourseRepo courseRepo;
 
     private final GenAI genAI;
 
@@ -39,9 +45,11 @@ public class ContentService {
     public Content find(final String id, final UUID userId) {
         Content content = contentRepo.findByIdAndUserId(id, userId).orElseThrow(() -> new NotFoundException("Content with id: " + id + " for " + userId + " does not exists"));
         content.setTotalContents(contentRepo.countByCourseId(content.getCourseId()));
+        content.setEnhanced(content.getCourse().isEnhanced());
         return content;
     }
 
+    @Transactional
     public Content enhance(final String id, final UUID userId) throws JsonMappingException, JsonProcessingException {
         Content content = find(id, userId);
         if(content.getCourse().isEnhanced()) {
@@ -54,11 +62,20 @@ public class ContentService {
         Chapter chapter = mapper.readValue(response, Chapter.class);
         String text = mapper.writeValueAsString(chapter);
         content.setText(text);
+        Course course = content.getCourse();
+        course.setEnhanced(true);
+        courseRepo.save(course);
         contentRepo.save(content);
+        content.setTotalContents(contentRepo.countByCourseId(content.getCourseId()));
+        content.setEnhanced(content.getCourse().isEnhanced());
         return content;
     }
 
     public void create(final Content content) {
         contentRepo.save(content);
+    }
+
+    public void deleteAllWithCourseId(final UUID id) {
+        contentRepo.deleteByCourseId(id);
     }
 }

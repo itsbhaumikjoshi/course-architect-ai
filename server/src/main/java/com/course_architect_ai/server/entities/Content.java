@@ -56,6 +56,9 @@ public class Content {
     @JsonProperty("total_contents")
     private int totalContents = 0;
 
+    @Transient
+    private boolean enhanced = false;
+
     public Content() {}
 
     public Content(@NotNull String id, Course course, @NotNull String text, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
@@ -136,6 +139,14 @@ public class Content {
 
     public void setTotalContents(int totalContents) {
         this.totalContents = totalContents;
+    }
+
+    public boolean isEnhanced() {
+        return enhanced;
+    }
+
+    public void setEnhanced(boolean enhanced) {
+        this.enhanced = enhanced;
     }
 
     @Override
