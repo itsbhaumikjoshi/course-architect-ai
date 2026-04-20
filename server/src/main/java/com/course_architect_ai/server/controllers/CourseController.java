@@ -25,7 +25,7 @@ public class CourseController {
         return ResponseEntity.status(200).body(courseService.find(id, userInfo.getId()));
     }
 
-    @GetMapping("/")
+    @GetMapping
     public ResponseEntity<Course[]> findAllForUser(@AuthenticationPrincipal UserInfo userInfo) {
         return ResponseEntity.status(200).body(
                 courseService.findAllForUser(userInfo.getId())
