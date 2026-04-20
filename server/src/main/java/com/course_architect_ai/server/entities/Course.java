@@ -1,12 +1,14 @@
 package com.course_architect_ai.server.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -44,23 +46,31 @@ public class Course {
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
+    @JsonProperty("created_at")
     private OffsetDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    @JsonProperty("updated_at")
+    private OffsetDateTime updatedAt;
 
     public Course() {}
 
-    public Course(UUID id, @NotNull String title, @NotNull String description, OffsetDateTime createdAt) {
+    public Course(UUID id, @NotNull String title, @NotNull String description, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.description = description;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
-    public Course(UUID id, @NotNull String title, @NotNull String description, OffsetDateTime createdAt, boolean isEnhanced) {
+    public Course(UUID id, @NotNull String title, @NotNull String description, OffsetDateTime createdAt, boolean isEnhanced, OffsetDateTime updatedAt) {
         this.id = id;
         this.title = title;
         this.isEnhanced = isEnhanced;
         this.description = description;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -119,6 +129,14 @@ public class Course {
         this.createdAt = createdAt;
     }
 
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -128,6 +146,7 @@ public class Course {
                 ", description='" + description + '\'' +
                 ", isEnhanced=" + isEnhanced +
                 ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }

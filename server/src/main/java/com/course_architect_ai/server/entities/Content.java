@@ -1,11 +1,13 @@
 package com.course_architect_ai.server.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.OffsetDateTime;
 import java.util.UUID;
@@ -37,21 +39,31 @@ public class Content {
     private Course course;
 
     @NotNull
-    @Lob
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
+    @JsonProperty("created_at")
     private OffsetDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at", nullable = false)
+    @JsonProperty("updated_at")
+    private OffsetDateTime updatedAt;
+
+    @Transient
+    @JsonProperty("total_contents")
+    private int totalContents = 0;
 
     public Content() {}
 
-    public Content(@NotNull String id, Course course, @NotNull String text, OffsetDateTime createdAt) {
+    public Content(@NotNull String id, Course course, @NotNull String text, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         this.id = id;
         this.course = course;
         this.text = text;
         this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public String getId() {
@@ -110,6 +122,22 @@ public class Content {
         this.createdAt = createdAt;
     }
 
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(OffsetDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public int getTotalContents() {
+        return totalContents;
+    }
+
+    public void setTotalContents(int totalContents) {
+        this.totalContents = totalContents;
+    }
+
     @Override
     public String toString() {
         return "Content{" +
@@ -118,6 +146,7 @@ public class Content {
                 ", courseId=" + courseId +
                 ", text='" + text + '\'' +
                 ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
                 '}';
     }
 }
