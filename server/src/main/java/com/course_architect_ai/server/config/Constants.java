@@ -8,7 +8,7 @@ public class Constants {
 
     public static final String GOOGLE_OAUTH_TOKEN_URL = "https://oauth2.googleapis.com/token";
 
-    public static final String GOOGLE_OAUTH_USER_INFO_URL = "https://oauth2.googleapis.com/token";
+    public static final String GOOGLE_OAUTH_USER_INFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
 
     private static final String PROMPT_GENERATE_COURSE = """
                 You are an expert curriculum designer.
