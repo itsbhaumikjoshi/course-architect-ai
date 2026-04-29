@@ -17,7 +17,7 @@ export const formTextFieldStyle: SxProps<Theme> = {
       borderColor: '#cbd5e1',
     },
     '&.Mui-focused fieldset': {
-      borderColor: '#3b82f6',
+      borderColor: 'primary.main',
     },
   },
 };
@@ -28,10 +28,12 @@ export const submitButtonStyle: SxProps<Theme> = {
   fontWeight: 'bold',
   fontSize: '1rem',
   textTransform: 'none',
-  boxShadow: '0 4px 14px 0 rgba(16, 185, 129, 0.39)',
-  backgroundColor: '#10b981',
+  boxShadow: '0 4px 14px 0 rgba(59, 130, 246, 0.39)',
+  backgroundColor: 'primary.main',
+  color: 'primary.contrastText',
   '&:hover': {
-    backgroundColor: '#059669',
-    boxShadow: '0 6px 20px rgba(16, 185, 129, 0.23)',
+    backgroundColor: 'primary.dark',
+    boxShadow: '0 6px 20px rgba(59, 130, 246, 0.23)',
   },
 };
+
