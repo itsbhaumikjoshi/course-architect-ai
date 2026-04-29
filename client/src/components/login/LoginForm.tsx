@@ -11,6 +11,9 @@ interface Props {
   onToggleRegister: () => void;
 }
 
+const TEST_EMAIL = import.meta.env.VITE_TEST_EMAIL;
+const TEST_PASSWORD = import.meta.env.VITE_TEST_PASSWORD;
+
 const LoginForm: React.FC<Props> = ({ onToggleRegister }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,9 +46,9 @@ const LoginForm: React.FC<Props> = ({ onToggleRegister }) => {
 
   const handleDevLogin = (e: React.MouseEvent) => {
     e.preventDefault();
-    setEmail('dev@test.com');
-    setPassword('password');
-    performLogin('dev@test.com', 'password');
+    setEmail(TEST_EMAIL);
+    setPassword(TEST_PASSWORD);
+    performLogin(TEST_EMAIL, TEST_PASSWORD);
   };
 
   return (
