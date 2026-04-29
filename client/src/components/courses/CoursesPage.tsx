@@ -18,6 +18,8 @@ export interface Course {
   userId: string;
 }
 
+const TEST_EMAIL = import.meta.env.VITE_TEST_EMAIL;
+
 const CoursesPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,6 +101,12 @@ const CoursesPage: React.FC = () => {
       {error && (
         <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
           {error}
+        </Alert>
+      )}
+
+      {user?.email === TEST_EMAIL && (
+        <Alert severity="info" sx={{ mb: 3, borderRadius: 2 }}>
+          This is a demo account. 
         </Alert>
       )}
 
