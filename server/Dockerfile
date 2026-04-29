@@ -9,7 +9,7 @@ FROM eclipse-temurin:17-jre
 WORKDIR /app
 
 # copy jar from builder
-COPY --from=builder /app/target/your-app-*.jar app.jar
+COPY --from=builder /app/target/app.jar app.jar
 
 # Render provides PORT env
 ENV PORT=8080
