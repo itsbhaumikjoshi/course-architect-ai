@@ -91,7 +91,9 @@ const CoursesPage: React.FC = () => {
         </Button>
       </Box>
 
-      <CoursesHeader userName={user ? `${user.firstName} ${user.lastName}` : ""} />
+      <CoursesHeader userName={
+        user ? `${user.firstName} ${user?.firstName === "Google" ? user?.lastName : (user?.lastName !== "User" && user?.lastName)}` : "User"
+      } />
 
       {error && (
         <Alert severity="error" sx={{ mb: 3, borderRadius: 2 }}>
