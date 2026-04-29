@@ -16,7 +16,7 @@ interface Props {
 
 const SegmentRenderer: React.FC<Props> = ({ segments }) => {
   return (
-    <Box sx={segmentContainerStyle}>
+    <Box sx={{ ...segmentContainerStyle, display: 'flex', flexDirection: 'column', gap: 3 }}>
       {segments.map((segment, index) => {
         switch (segment.type) {
           case 'text':
