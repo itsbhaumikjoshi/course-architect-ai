@@ -35,7 +35,7 @@ const HeroSection: React.FC<Props> = ({ onGetStarted }) => {
             fontSize: { xs: '1.2rem', sm: '1.5rem' }
           }}
         >
-          AI-powered learning generation tailored for you.
+          AI-generated learning paths, just for fun (and usefulness).
         </Typography>
         
         <Typography 
@@ -48,7 +48,7 @@ const HeroSection: React.FC<Props> = ({ onGetStarted }) => {
             mx: 'auto'
           }}
         >
-          Simply enter a learning prompt, and we'll instantly build a structured, comprehensive course with chapters, quizzes, and the ability to dive deeper into specific topics.
+          Drop in a topic, and this tool will spin up a simple course outline with chapters, quizzes, and optional deep dives.
         </Typography>
         
         <Button 

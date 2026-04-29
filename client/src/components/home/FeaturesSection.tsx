@@ -12,22 +12,22 @@ const FeaturesSection: React.FC = () => {
     {
       icon: <AutoFixHighIcon fontSize="large" />,
       title: "AI-Generated Courses",
-      description: "Provide a single prompt and watch as a comprehensive course is tailored specifically to your request within seconds."
+      description: "Give it a prompt, get a rough course structure in seconds."
     },
     {
       icon: <AccountTreeIcon fontSize="large" />,
       title: "Structured Learning",
-      description: "Courses are broken down into digestible chapters, segments, and quizzes to ensure you properly absorb the material."
+      description: "Content is split into small chapters and quizzes to keep things manageable."
     },
     {
       icon: <ZoomInIcon fontSize="large" />,
       title: "Deep Dive Enhancements",
-      description: "Found a topic you want to master? Enhance one chapter per course to unlock deep explanations, videos, and code examples."
+      description: "Want more detail on something? You can expand one chapter per course for extra explanations and examples."
     },
     {
       icon: <PersonIcon fontSize="large" />,
-      title: "Personalized For You",
-      description: "Keep track of up to 5 focused courses at a time. Quality over quantity ensures you finish what you start."
+      title: "Keep It Focused",
+      description: "You can have up to 5 active courses—just enough to stay productive without overloading."
     }
   ];
 
@@ -43,7 +43,7 @@ const FeaturesSection: React.FC = () => {
           fontSize: { xs: '2rem', md: '2.5rem' }
         }}
       >
-        Why Course Architect?
+        Why Course Architect (Side Project Edition)?
       </Typography>
       
       <Grid container spacing={4}>
