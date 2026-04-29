@@ -6,11 +6,14 @@ import { cardStyle, cardContentStyle } from '../../styles/courses/CoursesStyles'
 import type { Course } from './CoursesPage';
 import { useNavigate } from 'react-router-dom';
 import { deleteCourse, updateCourseTitle } from '../../adapters';
+import { useAuth } from '../../context/AuthContext';
 
 interface CourseCardProps {
   course: Course;
   setCourses: React.Dispatch<React.SetStateAction<Course[]>>;
 }
+
+const TEST_EMAIL = import.meta.env.VITE_TEST_EMAIL;
 
 const CourseCard: React.FC<CourseCardProps> = ({ course, setCourses }) => {
   const navigate = useNavigate();
@@ -22,6 +25,8 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, setCourses }) => {
   const [loadingUpdate, setLoadingUpdate] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [demoAlert, setDemoAlert] = useState(false);
+  const { user } = useAuth();
 
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -47,9 +52,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, setCourses }) => {
     setLoadingUpdate(true);
     setError(null);
     try {
-      const updatedCourse = await updateCourseTitle({ courseId: course.id, title: newTitle });
+      const updatedCourse = user?.email === TEST_EMAIL ? { ...course, title: newTitle } : await updateCourseTitle({ courseId: course.id, title: newTitle });
+      if (user?.email === TEST_EMAIL) {
+        setDemoAlert(true);
+      }
       if (updatedCourse) {
-        setCourses((prev) => prev.map((c) => (c.id === course.id ? updatedCourse : c)));
+        setCourses((prev) => [updatedCourse, ...prev.filter(c => c.id !== course.id)]);
         setUpdateDialogOpen(false);
       }
     } catch (err: any) {
@@ -65,7 +73,11 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, setCourses }) => {
     setLoadingDelete(true);
     setError(null);
     try {
-      await deleteCourse({ courseId: course.id });
+      if (user?.email !== TEST_EMAIL) {
+        await deleteCourse({ courseId: course.id });
+      } else {
+        setDemoAlert(true);
+      }
       setCourses((prev) => prev.filter((c) => c.id !== course.id));
     } catch (err: any) {
       setError(err.message || 'Failed to delete course.');
@@ -224,6 +236,12 @@ const CourseCard: React.FC<CourseCardProps> = ({ course, setCourses }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Snackbar open={demoAlert} autoHideDuration={10000} onClose={() => setDemoAlert(false)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} onClick={(e) => e.stopPropagation()}>
+        <Alert severity="info" onClose={() => setDemoAlert(false)} sx={{ borderRadius: 2 }}>
+          This is a demo account. Any updates or deletions won’t be saved and will reset on page refresh.
+        </Alert>
+      </Snackbar>
 
       <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} onClick={(e) => e.stopPropagation()}>
         <Alert severity="error" onClose={() => setError(null)} sx={{ borderRadius: 2 }}>
