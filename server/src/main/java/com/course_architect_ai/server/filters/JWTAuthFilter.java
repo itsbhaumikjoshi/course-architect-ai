@@ -34,8 +34,8 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.startsWith("/api/v1/auth") ||
-                path.startsWith("/api/v1/callback");
+        return "POST".equalsIgnoreCase(request.getMethod())
+                && ("/login".equals(path) || "/register".equals(path));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException ex) {
             SecurityContextHolder.clearContext();
-            filterChain.doFilter(request, response);
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
         }
     }
 }
