@@ -2,6 +2,7 @@ package com.course_architect_ai.server.services;
 
 import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.YTConfig;
+import com.course_architect_ai.server.errors.YTException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -9,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-@Service
+@Service    
 public class YTService {
 
     private final WebClient webClient;
@@ -41,11 +42,22 @@ public class YTService {
                 .block();
         JsonNode json = mapper.readTree(response);
 
+        if (json.has("error"))
+            throw new YTException("YouTube API error: " + json.path("error").toString());
+
+        JsonNode items = json.path("items");
+        if (!items.isArray() || items.size() == 0)
+            throw new YTException("No videos found for query: " + query);
+
         String videoId = json.path("items")
                 .get(0)
                 .path("id")
                 .path("videoId")
                 .asText();
+
+        if (videoId == null || videoId.isEmpty())
+            throw new YTException("Invalid videoId " + videoId + " in response");
+
         return Constants.YT_VIDEO_WATCH_URL + videoId;
     }
 

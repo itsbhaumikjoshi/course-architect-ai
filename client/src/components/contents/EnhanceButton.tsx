@@ -47,7 +47,7 @@ const EnhanceButton: React.FC<Props> = ({ courseId, contentId, setChapter }) => 
         {loading ? <CircularProgress size={24} sx={{ mr: 1, color: 'white' }} /> : <AutoAwesomeIcon sx={{ mr: 1 }} />}
         {loading ? 'Enhancing...' : 'Enhance Chapter'}
       </Fab>
-      <Snackbar open={!!error} autoHideDuration={6000} onClose={() => setError(null)} anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}>
+      <Snackbar open={!!error} autoHideDuration={10000} onClose={() => setError(null)} anchorOrigin={{ vertical: 'top', horizontal: 'center' }}>
         <Alert severity="error" onClose={() => setError(null)} sx={{ borderRadius: 2 }}>
           {error}
         </Alert>
