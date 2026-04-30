@@ -34,8 +34,27 @@ public class JWTAuthFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return "POST".equalsIgnoreCase(request.getMethod())
-                && ("/login".equals(path) || "/register".equals(path));
+        return ("POST".equalsIgnoreCase(request.getMethod()) &&
+            (
+                "/api/v1/auth/login".equals(path) ||
+                "/api/v1/auth/register".equals(path) ||
+                "/api/v1/callback/google".equals(path)
+            )
+        );
+    }
+
+    private void deleteCookie(HttpServletRequest request, HttpServletResponse response) {
+        if (request.getCookies() == null) return;
+        for (Cookie cookie : request.getCookies()) {
+            if (cookie.getName().equals("sid")) {
+                Cookie deleteCookie = new Cookie("sid", null);
+                deleteCookie.setPath("/");
+                deleteCookie.setMaxAge(0);
+                deleteCookie.setHttpOnly(true);
+                deleteCookie.setSecure(true);
+                response.addCookie(deleteCookie);
+            }
+        }
     }
 
     @Override
@@ -93,6 +112,7 @@ public class JWTAuthFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException ex) {
             SecurityContextHolder.clearContext();
+            deleteCookie(request, response); // removing the invalid cookie
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid or expired token");
         }
     }
