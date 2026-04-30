@@ -141,7 +141,7 @@ const RegisterForm: React.FC<Props> = ({ onToggleLogin }) => {
             component="button" 
             variant="body2" 
             onClick={onToggleLogin}
-            sx={{ fontWeight: 600, color: '#10b981', textDecoration: 'none' }}
+            sx={{ fontWeight: 600, mt: -0.5, color: 'primary.main', textDecoration: 'none' }}
           >
             Login
           </Link>

@@ -4,9 +4,12 @@ import { headerContainerStyle } from '../../styles/courses/CoursesStyles';
 
 interface CoursesHeaderProps {
   userName: string;
+  email: string;
 }
 
-const CoursesHeader: React.FC<CoursesHeaderProps> = ({ userName = '' }) => {
+const TEST_EMAIL = import.meta.env.VITE_TEST_EMAIL;
+
+const CoursesHeader: React.FC<CoursesHeaderProps> = ({ userName = '', email = '' }) => {
   return (
     <Box sx={headerContainerStyle}>
       <Typography
@@ -20,8 +23,26 @@ const CoursesHeader: React.FC<CoursesHeaderProps> = ({ userName = '' }) => {
           fontSize: { xs: '2rem', md: '3rem' }
         }}
       >
-        Welcome back, {userName}
+        Welcome, {userName}
       </Typography>
+      {email === TEST_EMAIL && (
+        <Typography
+          variant="body2"
+          sx={{
+            color: '#1d4ed8',
+            fontWeight: 500,
+            mb: 2,
+            backgroundColor: '#eff6ff',
+            py: 0.75,
+            px: 2,
+            borderRadius: 2,
+            display: 'inline-block',
+            border: '1px solid #bfdbfe'
+          }}
+        >
+          You are now logged in with the demo test account.
+        </Typography>
+      )}
       <Typography
         variant="h6"
         sx={{

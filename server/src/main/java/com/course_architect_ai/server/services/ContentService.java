@@ -4,6 +4,7 @@ import com.course_architect_ai.server.adapters.GenAI;
 import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.GenAIConfig;
 import com.course_architect_ai.server.dtos.genai.create.Chapter;
+import com.course_architect_ai.server.dtos.genai.create.Segment;
 import com.course_architect_ai.server.entities.Content;
 import com.course_architect_ai.server.entities.Course;
 import com.course_architect_ai.server.errors.EnhanceException;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,6 +29,9 @@ public class ContentService {
 
     @Autowired
     private CourseRepo courseRepo;
+
+    @Autowired
+    private YTService ytService;
 
     private final GenAI genAI;
 
@@ -60,6 +65,17 @@ public class ContentService {
         );
         String response = genAI.fetch(prompt);
         Chapter chapter = mapper.readValue(response, Chapter.class);
+        List<Segment> segments = chapter.getSegments();
+        for(Segment segment : segments) {
+            if("video_query".equals(segment.getType())) {
+                segment.setType("video_url");
+                segment.setValue(
+                    ytService.searchVideos(
+                        segment.getValue()
+                    )
+                );
+            }
+        }
         String text = mapper.writeValueAsString(chapter);
         content.setText(text);
         Course course = content.getCourse();

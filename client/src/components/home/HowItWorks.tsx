@@ -10,17 +10,17 @@ const HowItWorks: React.FC = () => {
     {
       icon: <CreateIcon sx={{ fontSize: 40 }} />,
       title: "1. Enter a Prompt",
-      description: "Tell us exactly what you want to learn. 'Advanced React Patterns', 'Python for Data Science', etc."
+      description: "Type what you want to learn (e.g., “Advanced React” or “Intro to ML”)."
     },
     {
       icon: <PrecisionManufacturingIcon sx={{ fontSize: 40 }} />,
       title: "2. AI Generates",
-      description: "Our AI engines build a structured curriculum with chapters, lessons, and interactive quizzes."
+      description: "It creates a basic course structure with chapters and quizzes."
     },
     {
       icon: <SchoolIcon sx={{ fontSize: 40 }} />,
       title: "3. Learn & Enhance",
-      description: "Work through your course and use your enhancement token to deep dive into complex chapters."
+      description: "Go through it at your own pace and optionally expand deeper into topics."
     }
   ];
 

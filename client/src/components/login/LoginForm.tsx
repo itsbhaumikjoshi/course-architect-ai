@@ -110,7 +110,7 @@ const LoginForm: React.FC<Props> = ({ onToggleRegister }) => {
               }
             }}
           >
-            Login with Dev Creds
+            Log in with the demo test account.
           </Button>
         </Box>
       </Box>
@@ -150,7 +150,7 @@ const LoginForm: React.FC<Props> = ({ onToggleRegister }) => {
             component="button"
             variant="body2"
             onClick={onToggleRegister}
-            sx={{ fontWeight: 600, color: '#3b82f6', textDecoration: 'none' }}
+            sx={{ fontWeight: 600, mt: -0.5, color: 'primary.main', textDecoration: 'none' }}
           >
             Create an account
           </Link>

@@ -41,10 +41,10 @@ const HomePage: React.FC = () => {
       <Box sx={footerStyle}>
         <Container maxWidth="lg">
           <Typography variant="body2" sx={{ color: '#64748b' }}>
-            © {new Date().getFullYear()} Course Architect AI. Built for the future of learning.
+            © {new Date().getFullYear()} Course Architect AI — a small experimental project.
           </Typography>
           <Typography variant="caption" sx={{ color: '#94a3b8', display: 'block', mt: 1 }}>
-            Focus on quality over quantity. Limit of 5 active courses per account.
+            Designed to keep things simple. Max 5 active courses at a time.
           </Typography>
         </Container>
       </Box>

@@ -5,6 +5,7 @@ import com.course_architect_ai.server.config.Constants;
 import com.course_architect_ai.server.config.GenAIConfig;
 import com.course_architect_ai.server.dtos.CourseCreateRequest;
 import com.course_architect_ai.server.dtos.genai.create.GenAICourse;
+import com.course_architect_ai.server.dtos.genai.create.Segment;
 import com.course_architect_ai.server.entities.Content;
 import com.course_architect_ai.server.entities.Course;
 import com.course_architect_ai.server.entities.User;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -28,6 +30,9 @@ public class CourseService {
     private CourseRepo courseRepo;
     @Autowired
     private ContentService contentService;
+
+    @Autowired
+    private YTService ytService;
 
     private GenAI genAI;
     private final ObjectMapper mapper;
@@ -57,6 +62,17 @@ public class CourseService {
         course.setUserId(user.getId());
         // create content for the course
         for(int i = 0, n = genAICourse.getChapters().size(); i < n; i++) {
+            List<Segment> segments = genAICourse.getChapters().get(i).getSegments();
+            for(Segment segment : segments) {
+                if("video_query".equals(segment.getType())) {
+                    segment.setType("video_url");
+                    segment.setValue(
+                        ytService.searchVideos(
+                            segment.getValue()
+                        )
+                    );
+                }
+            }
             Content content = new Content();
             content.setUser(user);
             content.setCourse(course);
