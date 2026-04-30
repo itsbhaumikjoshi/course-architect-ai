@@ -104,12 +104,6 @@ const CoursesPage: React.FC = () => {
         </Alert>
       )}
 
-      {user?.email === TEST_EMAIL && (
-        <Alert severity="info" sx={{ mb: 3, borderRadius: 2 }}>
-          This is a demo account. 
-        </Alert>
-      )}
-
       <PromptInput setCourses={setCourses} />
 
       <Box sx={coursesGridStyle}>
