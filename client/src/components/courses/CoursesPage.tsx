@@ -18,8 +18,6 @@ export interface Course {
   userId: string;
 }
 
-const TEST_EMAIL = import.meta.env.VITE_TEST_EMAIL;
-
 const CoursesPage: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(true);
