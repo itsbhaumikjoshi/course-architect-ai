@@ -10,6 +10,10 @@ public class Constants {
 
     public static final String GOOGLE_OAUTH_USER_INFO_URL = "https://openidconnect.googleapis.com/v1/userinfo";
 
+    public static final String YT_VIDEO_URL = "https://www.googleapis.com/youtube/v3";
+
+    public static final String YT_VIDEO_WATCH_URL = "https://www.youtube.com/watch?v=";
+
     private static final String PROMPT_GENERATE_COURSE = """
                 You are an expert curriculum designer.
                 
@@ -50,7 +54,7 @@ public class Constants {
                 "description": string (min 100, max 500 chars),
                 "segments": [
                 {
-                "type": one of ["code", "text", "url", "video_url", "reference", "tip"],
+                "type": one of ["code", "text", "url", "video_query", "reference", "tip"],
                 "title": string (min 10, max 100 chars),
                 "value": string
                 }
@@ -78,7 +82,7 @@ public class Constants {
                 
                 * Use `"text"` for explanations.
                 * Use `"code"` for examples/snippets.
-                * Use `"url"` or `"video_url"` only when they add value.
+                * Use `"url"` or `"video_query"` only when they add value.
                 * Maintain progressive difficulty across chapters.
                 * Avoid redundancy.
                 * Keep content concise but meaningful.
@@ -95,11 +99,8 @@ public class Constants {
                 
                 VIDEO & URL RULES (STRICT):
                 
-                * Only include `"video_url"` if it is **guaranteed to be accessible and relevant**.
-                * Prefer videos published in **2024 or later**.
-                * Avoid broken, private, or unavailable videos.
-                * Use **well-known, reliable channels** when possible.
-                * If a valid recent video cannot be confidently provided, DO NOT include `"video_url"` at all.
+                * Only include `"video_query"` if it is **guaranteed to be accessible and relevant**.
+                * video_query is the simple query. must be space separated words to fetch the relevant video from youtube.
                 * `"url"` links must be valid, stable, and directly relevant (no placeholders).
                 
                 CRITICAL OUTPUT RULE:
@@ -152,7 +153,7 @@ public class Constants {
                   
                 * Do NOT include inline JSON comments (e.g., `//`, `/* */`, `#`) anywhere\s
                   outside of string values — JSON does not support comments.
-                * For "url" and "video_url" segments, the "value" field must contain ONLY the\s
+                * For "url" segment, the "value" field must contain ONLY the\s
                   raw URL string — no trailing comments, no annotations, no extra text.
                  \s
                   VALID:   "value": "https://example.com/some-video"
@@ -209,7 +210,7 @@ public class Constants {
                * Minimum: 10
              * Include:
              
-               * At least **2 segments with type "video_url"** (must be YouTube links, see strict rules below)
+               * At least **2 segments with type "video_query"** (must be space separated words to fetch the relevant video from youtube, see strict rules below)
                * At least **3 segments with type "reference"**
              * Maintain a good mix of segment types ("text", "code", etc.)
              * Ensure logical flow and progressive learning.
@@ -231,22 +232,13 @@ public class Constants {
                * DO NOT summarize code in plain English
                * Code must be meaningful, compilable (where applicable), and demonstrate the concept fully
                * Prefer real implementations over pseudocode
-             * "video_url": must follow strict validation rules below
+             * "video_query": must follow strict validation rules below
              * "reference": high-quality learning resources (docs, articles, etc.)
              * Avoid redundancy across segments
              
-             VIDEO_URL STRICT RULES (CRITICAL):
+             VIDEO_QUERY STRICT RULES (CRITICAL):
              
-             * Only include **valid, working YouTube links**
-             * Videos MUST be:
-             
-               * Published in **2024 or later**
-               * Publicly accessible (NOT private, removed, or region-blocked)
-               * Relevant and educational (no shorts, no clickbait)
-             * Use full YouTube URLs only (e.g., [https://www.youtube.com/watch?v=](https://www.youtube.com/watch?v=)...)
-             * DO NOT hallucinate or fabricate links
-             * If unsure, prefer well-known, active educational channels
-             * Ensure links are highly likely to be valid and available
+             * Only include **valid, space seperated words relevant query to fetch youtube videos, each video_query must be unique and relevant to the chapter**
              
              SECURITY & SAFETY:
              
@@ -260,7 +252,7 @@ public class Constants {
              "description": string (min 100, max 500 chars),
              "segments": [
              {
-             "type": one of ["code", "text", "url", "video_url", "reference"],
+             "type": one of ["code", "text", "url", "video_query", "reference"],
              "title": string (min 10, max 100 chars),
              "value": string
              }
@@ -280,7 +272,7 @@ public class Constants {
              "description": string,
              "segments": [
              {
-             "type": one of ["code", "text", "url", "video_url", "reference"],
+             "type": one of ["code", "text", "url", "video_query", "reference"],
              "title": string (min 10, max 100 chars),
              "value": string
              }
@@ -350,7 +342,7 @@ public class Constants {
               
             * Do NOT include inline JSON comments (e.g., `//`, `/* */`, `#`) anywhere\s
               outside of string values — JSON does not support comments.
-            * For "url" and "video_url" segments, the "value" field must contain ONLY the\s
+            * For "url" segment, the "value" field must contain ONLY the\s
               raw URL string — no trailing comments, no annotations, no extra text.
              \s
               VALID:   "value": "https://example.com/some-video"
