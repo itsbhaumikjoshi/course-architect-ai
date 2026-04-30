@@ -38,7 +38,7 @@ export const codeBlockStyle: SxProps<Theme> = {
   backgroundColor: '#0f172a',
   color: '#e2e8f0',
   p: 3,
-  borderRadius: 3,
+  borderRadius: 1,
   overflowX: 'auto',
   fontFamily: 'monospace',
   fontSize: '0.9rem',
@@ -50,12 +50,14 @@ export const linkPreviewStyle: SxProps<Theme> = {
   display: 'flex',
   alignItems: 'center',
   p: 2,
-  borderRadius: 3,
+  borderRadius: 1,
   border: '1px solid #e2e8f0',
   backgroundColor: '#ffffff',
   textDecoration: 'none',
   color: 'inherit',
   transition: 'all 0.2s ease',
+  minWidth: 0,
+  gap: 2,
   '&:hover': {
     boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
     borderColor: '#cbd5e1',
@@ -68,7 +70,7 @@ export const videoContainerStyle: SxProps<Theme> = {
   paddingBottom: '56.25%',
   height: 0,
   overflow: 'hidden',
-  borderRadius: 4,
+  borderRadius: 2,
   boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
   backgroundColor: '#000',
   '& iframe': {
@@ -84,11 +86,13 @@ export const videoContainerStyle: SxProps<Theme> = {
 export const referenceBlockStyle: SxProps<Theme> = {
   display: 'flex',
   p: 3,
-  borderRadius: 3,
+  borderRadius: 0,
   backgroundColor: '#eff6ff',
   borderLeft: '4px solid #3b82f6',
   color: '#1e3a8a',
   gap: 2,
+  minWidth: 0,
+  flexWrap: 'wrap',
 };
 
 export const quizSectionStyle: SxProps<Theme> = {
@@ -115,7 +119,7 @@ export const quizQuestionCardStyle = (isSelected: boolean, isCorrect: boolean | 
   return {
     p: 2,
     mb: 2,
-    borderRadius: 2,
+    borderRadius: 1,
     border: `2px solid ${borderColor}`,
     backgroundColor,
     cursor: 'pointer',
