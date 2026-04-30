@@ -185,6 +185,14 @@ public class ErrorHandler {
         ));
     }
 
+    @ExceptionHandler(YTException.class)
+    public ResponseEntity<ErrorResponse> ytException(YTException ytException) {
+        return ResponseEntity.status(500).body(new ErrorResponse(
+                ytException.getMessage(),
+                "YT_EXCEPTION"
+        ));
+    }
+
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> exception() {
         return ResponseEntity.status(500).body(new ErrorResponse(
