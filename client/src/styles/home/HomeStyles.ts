@@ -35,7 +35,6 @@ export const featureCardStyle: SxProps<Theme> = {
   boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
   backgroundColor: '#ffffff',
   '&:hover': {
-    transform: 'translateY(-8px)',
     boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
     borderColor: '#cbd5e1',
   }
