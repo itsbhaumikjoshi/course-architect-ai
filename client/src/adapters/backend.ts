@@ -9,7 +9,7 @@ axios.interceptors.request.use((config: any) => {
     if (config.url?.startsWith(BASE_URL) && !config.skipNotification) {
         const timer = setTimeout(() => {
             showNotification("Starting Backend, might take upto 60secs.");
-        }, 50000);
+        }, 5000);
         pendingTimers.set(config, timer);
     }
     return config;
