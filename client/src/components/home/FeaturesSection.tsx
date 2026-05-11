@@ -43,7 +43,7 @@ const FeaturesSection: React.FC = () => {
           fontSize: { xs: '2rem', md: '2.5rem' }
         }}
       >
-        Why Course Architect (Side Project Edition)?
+        Course Architect AI?
       </Typography>
       
       <Grid container spacing={4}>
