@@ -145,19 +145,19 @@ public class ErrorHandler {
     @ExceptionHandler(JsonMappingException.class)
     public ResponseEntity<ErrorResponse> jsonMappingError(JsonMappingException jsonMappingException) {
         return ResponseEntity.status(500)
-                .body(new ErrorResponse("Unable to parse json. Please try again", "INTERNAL_SERVER_ERROR"));
+                .body(new ErrorResponse("Unable to parse GenAI response. Please try again", "INTERNAL_SERVER_ERROR"));
     }
 
     @ExceptionHandler(JsonProcessingException.class)
     public ResponseEntity<ErrorResponse> jsonProcessingError(JsonProcessingException jsonProcessingException) {
         return ResponseEntity.status(500)
-                .body(new ErrorResponse("Unable to parse json. Please try again", "INTERNAL_SERVER_ERROR"));
+                .body(new ErrorResponse("Unable to parse GenAI response. Please try again", "INTERNAL_SERVER_ERROR"));
     }
 
     @ExceptionHandler(JsonParseException.class)
     public ResponseEntity<ErrorResponse> jsonParseError(JsonParseException jsonParseException) {
         return ResponseEntity.status(500)
-                .body(new ErrorResponse("Unable to parse json. Please try again", "INTERNAL_SERVER_ERROR"));
+                .body(new ErrorResponse("Unable to parse GenAI response. Please try again", "INTERNAL_SERVER_ERROR"));
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
